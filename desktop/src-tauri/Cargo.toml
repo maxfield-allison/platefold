@@ -17,7 +17,7 @@ open = "5"
 dunce = "1.0.5"
 reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "rustls"] }
 semver = "1"
-minisign-verify = "0.2.5"
+minisign-verify = "0.3.0"
 tempfile = "3"
 base64 = "0.22"
 futures-util = "0.3"
