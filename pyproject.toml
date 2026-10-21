@@ -50,7 +50,7 @@ dependencies = [
     "Pillow>=13.0.0",         # image dimensions and downsampling; patched image codecs
     "pypdfium2>=5.13,<6",     # first-page images for the desktop preview
     "tinycss2>=1.5.1,<2",     # tokenize authored CSS before resource validation
-    "mammoth>=1.11,<1.12.2",
+    "mammoth>=1.11,<1.13.1",
     "defusedxml>=0.7,<1",
     "openpyxl>=3.1.5,<4",
 ]
@@ -68,8 +68,8 @@ dev = [
     "pdfplumber>=0.11",  # blank-page regression check
     "pytest>=8.0",
     "cryptography>=46",  # release-evidence signature checks (tools/assemble_release.py)
-    "ruff==0.16.6",
-    "pyright==1.1.411",
+    "ruff==0.17.1",
+    "pyright==1.1.414",
     "build>=1.2",
     # Not used at runtime. Kept purely as a way to download a pinned Chromium
     # for the self-contained build and for the cross-engine comparison test:

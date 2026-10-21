@@ -1,5 +1,5 @@
 Babel==2.18.0
-Markdown==3.11
+Markdown==3.11.1
 PyYAML==6.0.3
 Pygments==2.21.0
 attrs==26.1.0
@@ -8,13 +8,13 @@ defusedxml==0.7.1
 et-xmlfile==2.0.0
 jsonschema-specifications==2025.9.1
 jsonschema==4.26.0
-mammoth==1.12.1
+mammoth==1.13.0
 openpyxl==3.1.5
 pillow==13.0.0
-pypdf==6.19.0
-pypdfium2==5.13.0
+pypdf==6.21.1
+pypdfium2==5.14.0
 referencing==0.37.0
-rpds-py==2026.6.3
+rpds-py==2026.9.1
 tinycss2==1.5.1
 webencodings==0.6.1
 websocket-client==1.9.2
