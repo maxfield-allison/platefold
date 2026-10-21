@@ -11,7 +11,7 @@
 # the configuration, theme and CLI reference from it. Keep versions exact so a
 # rebuild renders the same site.
 zensical==0.0.69
-pymdown-extensions==11.0.2
+pymdown-extensions==12.3
 Pygments==2.21.0
 cairosvg==2.9.1
 fonttools==4.65.0
