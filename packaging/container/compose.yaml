@@ -1,0 +1,41 @@
+services:
+  platefold:
+    # Set this to the exact qualified repository@sha256:digest.
+    image: ${PLATEFOLD_IMAGE:?Set PLATEFOLD_IMAGE to the qualified image digest}
+    init: false # tini is already the image entrypoint
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+      - seccomp=./seccomp.json
+    command:
+      - serve
+      - --host
+      - 0.0.0.0
+      - --data-dir
+      - /data/jobs
+      - --tokens-file
+      - /run/secrets/api.json
+      - --limits-file
+      - /opt/platefold/limits.json
+      - --origin
+      - ${PLATEFOLD_ORIGIN:-http://127.0.0.1:8787}
+    environment:
+      PLATEFOLD_HEALTH_HOST: ${PLATEFOLD_HEALTH_HOST:-127.0.0.1:8787}
+    ports: ["127.0.0.1:8787:8787"]
+    volumes:
+      - type: bind
+        source: ${PLATEFOLD_DATA:?Set PLATEFOLD_DATA to a directory owned by UID 10001}
+        target: /data
+      - type: bind
+        source: ${PLATEFOLD_TOKENS_FILE:?Set PLATEFOLD_TOKENS_FILE to a private file owned by UID 10001}
+        target: /run/secrets/api.json
+        read_only: true
+    tmpfs: ["/tmp:rw,nosuid,nodev,size=512m,mode=1777"]
+    shm_size: 256m
+    mem_limit: 3g
+    cpus: 2
+    pids_limit: 256
+    restart: unless-stopped
+    stop_grace_period: 30s

@@ -1,0 +1,56 @@
+.TH PLATEFOLD 1 "" "Plate|Fold" "User Commands"
+.SH NAME
+platefold \- render documents to print-quality PDFs with room for wide figures
+.SH SYNOPSIS
+.B platefold
+[\fIoptions\fR] [\fIinput\fR]
+.SH DESCRIPTION
+.B platefold
+turns Markdown, DOCX, XLSX, CSV and TSV documents, and DOC, ODT or RTF
+through an installed converter, into PDFs. Each wide diagram or table is
+placed on a page it fits: inline, on a landscape plate, or on a larger sheet
+sized to it.
+.PP
+\fIinput\fR is one document or a folder of documents. PDFs are written to
+\fB\-o\fR \fIfolder\fR, or to a folder named "PDF Export" beside the input
+folder. For a single file, that is beside the folder holding it, one level up.
+.SH OPTIONS
+.TP
+.BR \-o ", " \-\-output " " \fIfolder\fR
+Write the PDFs to \fIfolder\fR.
+.TP
+.BR \-\-preset " " \fIpaper\fR
+Paper size, such as letter, a4 or auto.
+.TP
+.BR \-\-theme " " \fIname\fR
+A built-in or custom theme, or source to use a DOCX or XLSX document's own
+palette.
+.TP
+.BR \-\-browser " " \fIchoice\fR
+The rendering engine: auto (the default), bundled, system, edge, chrome,
+chromium, brave, or an executable path. With auto, when the system refuses the bundled Chromium its
+sandbox, an installed Chrome, Chromium, Edge or Brave is used instead. The
+sandbox is never turned off.
+.TP
+.B \-\-json
+Print the result as JSON.
+.TP
+.B \-\-list\-themes
+List the built-in and installed themes and font sets.
+.TP
+.B \-\-version
+Print the version and exit.
+.TP
+.BR \-h ", " \-\-help
+Show every option.
+.SH FILES
+.TP
+.I $XDG_CONFIG_HOME/platefold/themes
+Your themes (default \fI~/.config/platefold/themes\fR).
+.TP
+.I $XDG_CACHE_HOME/platefold/diagram\-cache
+Diagram cache (default \fI~/.cache/platefold/diagram\-cache\fR).
+.SH SEE ALSO
+.BR platefold\-desktop (1)
+.PP
+https://maxfield-allison.github.io/platefold/

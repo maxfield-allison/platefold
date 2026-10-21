@@ -1,0 +1,27 @@
+{
+  "name": "carbon",
+  "label": "Carbon — copper",
+  "description": "Warm charcoal with copper accents and sand-coloured headings.",
+  "mode": "dark",
+  "colors": {
+    "page": "#231b17",
+    "accent": "#f2a66e",
+    "accent_soft": "#81573c",
+    "ink": "#f0e6dc",
+    "ink_strong": "#fff4e8",
+    "title": "#fff4e8",
+    "heading": "#ffd0a5",
+    "ink_soft": "#c5afa0",
+    "rule": "#604b3e",
+    "surface": "#38291f",
+    "surface_alt": "#2d221c",
+    "link": "#f2a66e",
+    "diagram_fill": "#493024",
+    "diagram_stroke": "#f2a66e",
+    "diagram_text": "#f0e6dc",
+    "diagram_alt_fill": "#39382a",
+    "diagram_note_fill": "#38291f",
+    "diagram_note_stroke": "#81573c"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

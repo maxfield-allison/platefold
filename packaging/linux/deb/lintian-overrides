@@ -1,0 +1,25 @@
+# Plate|Fold installs the frozen runtime that its AppImage ships, byte for
+# byte: a Python interpreter and libraries built by PyInstaller, the wheels'
+# own shared libraries, and a Chromium headless shell. Keeping one payload
+# means both Linux downloads render identically and the .deb's Chromium is the
+# file the AppArmor profile names. The findings below follow from that, and
+# none of them changes what the package does to the system.
+
+# The runtime carries its own copies of these libraries (the Debian 12 build
+# system's, Pillow's and PDFium's wheels, and Chromium's static builds)
+# instead of using the system's.
+platefold: embedded-library * [usr/lib/PlateFold/runtime/*]
+
+# PyInstaller's bootloader, which starts the frozen CLI, is not built as PIE.
+platefold: hardening-no-pie [usr/lib/PlateFold/runtime/platefold]
+
+# Python extension modules resolve their symbols from the interpreter that
+# loads them, so they declare no libc dependency of their own.
+platefold: shared-library-lacks-prerequisites [usr/lib/PlateFold/runtime/_internal/python3.11/lib-dynload/*]
+
+# util-linux's libblkid and libmount mention sensible-pager in a string; the
+# runtime never runs a pager.
+platefold: missing-depends-on-sensible-utils sensible-pager [usr/lib/PlateFold/runtime/_internal/*]
+
+# FreeType's license text as PDFium's build ships it, in Latin-1.
+platefold: national-encoding [usr/lib/PlateFold/runtime/_internal/pypdfium2-*.dist-info/licenses/*]

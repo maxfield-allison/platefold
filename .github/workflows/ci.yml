@@ -1,0 +1,150 @@
+name: CI
+
+# Pull-request and main-branch checks for the public source repository.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.10"
+      # The Tk window's keyboard tests start a private Xvfb display.
+      - name: Install Xvfb
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
+      - name: Install test dependencies
+        run: uv sync --locked --all-extras
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff check --preview --select PLR1702 platefold
+          uv run ruff format --check .
+          uv run pyright platefold
+          uv run python tools/check_i18n.py
+      - name: Test
+        env:
+          PLATEFOLD_REQUIRE_TEST_PREREQUISITES: "1"
+        run: uv run pytest -m "not integration"
+
+  frontend:
+    name: Desktop frontend build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22.23.2"
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Build the desktop frontend
+        working-directory: desktop
+        run: |
+          npm ci
+          npm audit --audit-level=high
+          npm run build
+          test -s dist/index.html
+          test -s node_modules/axe-core/axe.min.js
+      # axe-core is a test-only dependency: the browser accessibility tests
+      # inject it into the built interface. It is never bundled into dist.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-frontend
+          path: |
+            desktop/dist/
+            desktop/node_modules/axe-core/axe.min.js
+          if-no-files-found: error
+          retention-days: 1
+
+  browser:
+    name: Browser integration
+    needs: frontend
+    runs-on: ubuntu-latest
+    env:
+      PLATEFOLD_REQUIRE_TEST_PREREQUISITES: "1"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The artifact's root is desktop/: it holds dist/ and
+      # node_modules/axe-core/axe.min.js.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: desktop-frontend
+          path: desktop
+      # Chromium's sandbox needs a user namespace. Ubuntu 24.04 denies one to
+      # processes AppArmor does not name, and Docker's default seccomp profile
+      # denies unshare. This throwaway VM lifts the AppArmor restriction, and
+      # the tests run under the image's published seccomp profile, which
+      # permits exactly that. Nothing turns the sandbox off. Docker's 64 MB
+      # /dev/shm is too small for a full Chromium build, which then crashes
+      # mid-render.
+      - name: Let Chromium create its sandbox
+        run: |
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+      - name: Run real-browser tests with the sandbox enabled
+        run: >-
+          docker run --rm --init --shm-size=1g
+          --security-opt seccomp=packaging/container/seccomp.json
+          --env PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+          --env PLATEFOLD_REQUIRE_TEST_PREREQUISITES
+          --volume "$PWD:/work" --workdir /work
+          mcr.microsoft.com/playwright/python:v1.62.0-noble@sha256:51d31fdfacb0cff99a1a724152e34ae408d2bd4e7da310ff157450f49261cc59
+          bash -euo pipefail -c '
+          pip install --quiet --break-system-packages uv==0.12.10 &&
+          uv sync --locked --all-extras &&
+          runuser -u pwuser --
+          .venv/bin/python -m pytest -x -m integration -p no:cacheprovider
+          --basetemp=/tmp/platefold-tests'
+
+  desktop:
+    name: Native shell
+    needs: frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # tauri::generate_context! embeds the built frontend at compile time.
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: desktop-frontend
+          path: desktop
+      - name: Install Linux desktop libraries
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install -y --no-install-recommends
+          gcc-mingw-w64-x86-64 libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev
+      - name: Select the Rust toolchain
+        run: |
+          rustup toolchain install 1.89.0 --profile minimal --component clippy
+          rustup target add --toolchain 1.89.0 x86_64-pc-windows-gnu
+      - name: Test the native shell
+        working-directory: desktop/src-tauri
+        env:
+          RUSTUP_TOOLCHAIN: 1.89.0
+        run: |
+          mkdir -p runtime
+          cargo test --locked --workspace --no-default-features --features tauri-plugin-updater/rustls-tls
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo check --locked --target x86_64-pc-windows-gnu

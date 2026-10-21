@@ -1,0 +1,263 @@
+/* Plate|Fold brand theme for Material for MkDocs.
+ *
+ * The eight custom properties in the first block are the brand palette, and
+ * this file is its machine-readable definition. tests/test_brand_assets.py reads
+ * them from here and fails on any colour in a brand asset, this stylesheet or the
+ * asset generator that is not one of them. tools/build_brand_assets.py carries the
+ * same values; the test checks the two agree.
+ *
+ * A translucent colour is allowed when its RGB channels are a token, because
+ * that is the same ink at a lighter weight rather than a new colour.
+ *
+ * Contrast, WCAG 2.1 relative luminance, measured 2026-09-12:
+ *   on paper-50:  navy-900 15.84  amber-800 6.04  ember-700 5.04  amber-700 3.92
+ *   on navy-950:  paper-50 17.30  amber-400 10.07  ember-400 6.72
+ *   on navy-900:  paper-50 15.84  amber-400 9.22   ember-400 6.15
+ * amber-700 is graphics and large text only (3.0 bar). The 400s are dark
+ * grounds only: amber-400 is 1.72 on paper.
+ */
+
+/* ---------------------------------------------------------------- tokens */
+
+:root {
+  --pf-navy-950: #0a1422;
+  --pf-navy-900: #0f1d31;
+  --pf-paper-50: #faf7f2;
+  --pf-amber-400: #f2b457;
+  --pf-ember-400: #ef7b55;
+  --pf-amber-700: #a9700e;
+  --pf-ember-700: #b4482a;
+  --pf-amber-800: #845407;
+}
+
+/* ----------------------------------------------------------------- fonts */
+
+/* Sora ships as a variable font, so one file covers the 400-600 weights the
+ * brand uses. JetBrains Mono is the same file the package bundles for its sora
+ * font set. Both are SIL OFL 1.1; the licence texts sit beside the files. */
+@font-face {
+  font-family: "Sora";
+  src: url("./fonts/sora-variable.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./fonts/jetbrains-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --md-text-font: "Sora";
+  --md-code-font: "JetBrains Mono";
+}
+
+.md-header__topic .md-ellipsis,
+.md-nav__title,
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  letter-spacing: -0.015em;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 600;
+}
+
+.md-typeset h1 {
+  color: var(--md-typeset-color);
+}
+
+/* --------------------------------------------------- light scheme (default) */
+
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--pf-navy-950);
+  --md-primary-fg-color--light: var(--pf-navy-900);
+  --md-primary-fg-color--dark: var(--pf-navy-950);
+  --md-primary-bg-color: var(--pf-paper-50);
+  --md-primary-bg-color--light: rgba(250, 247, 242, 0.7);
+
+  --md-accent-fg-color: var(--pf-ember-700);
+  --md-accent-fg-color--transparent: rgba(180, 72, 42, 0.1);
+
+  --md-default-bg-color: var(--pf-paper-50);
+  --md-default-fg-color: rgba(15, 29, 49, 0.9);
+  --md-default-fg-color--light: rgba(15, 29, 49, 0.7);
+  --md-default-fg-color--lighter: rgba(15, 29, 49, 0.35);
+  --md-default-fg-color--lightest: rgba(15, 29, 49, 0.1);
+
+  --md-typeset-color: var(--pf-navy-900);
+  --md-typeset-a-color: var(--pf-ember-700);
+
+  --md-code-bg-color: rgba(15, 29, 49, 0.05);
+  --md-code-fg-color: var(--pf-navy-900);
+
+  --md-footer-bg-color: var(--pf-navy-950);
+  --md-footer-bg-color--dark: var(--pf-navy-950);
+  --md-footer-fg-color: var(--pf-paper-50);
+}
+
+/* amber-700 is graphics weight on paper: rules and table heads, never text. */
+[data-md-color-scheme="default"] .md-typeset hr,
+[data-md-color-scheme="default"] .md-typeset table:not([class]) th {
+  border-color: var(--pf-amber-700);
+}
+
+[data-md-color-scheme="default"] .md-typeset :not(pre) > code {
+  color: var(--pf-amber-800);
+}
+
+/* Syntax highlighting in two inks, same jobs as the mark: ember for structure,
+ * amber for literals. On the 5% navy code ground, amber-800 and ember-700 stay
+ * above 4.5:1. */
+[data-md-color-scheme="default"] {
+  --md-code-hl-keyword-color: var(--pf-ember-700);
+  --md-code-hl-constant-color: var(--pf-ember-700);
+  --md-code-hl-special-color: var(--pf-ember-700);
+  --md-code-hl-function-color: var(--pf-navy-900);
+  --md-code-hl-string-color: var(--pf-amber-800);
+  --md-code-hl-number-color: var(--pf-amber-800);
+  --md-code-hl-name-color: var(--pf-navy-900);
+  --md-code-hl-variable-color: var(--pf-navy-900);
+  --md-code-hl-operator-color: rgba(15, 29, 49, 0.75);
+  --md-code-hl-punctuation-color: rgba(15, 29, 49, 0.75);
+  --md-code-hl-comment-color: rgba(15, 29, 49, 0.7);
+  --md-code-hl-generic-color: rgba(15, 29, 49, 0.7);
+}
+
+/* ---------------------------------------------------- dark scheme (slate) */
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 216;
+
+  --md-primary-fg-color: var(--pf-navy-900);
+  --md-primary-fg-color--light: var(--pf-navy-900);
+  --md-primary-fg-color--dark: var(--pf-navy-950);
+  --md-primary-bg-color: var(--pf-paper-50);
+  --md-primary-bg-color--light: rgba(250, 247, 242, 0.7);
+
+  --md-accent-fg-color: var(--pf-ember-400);
+  --md-accent-fg-color--transparent: rgba(239, 123, 85, 0.1);
+
+  --md-default-bg-color: var(--pf-navy-950);
+  --md-default-fg-color: rgba(250, 247, 242, 0.9);
+  --md-default-fg-color--light: rgba(250, 247, 242, 0.7);
+  --md-default-fg-color--lighter: rgba(250, 247, 242, 0.35);
+  --md-default-fg-color--lightest: rgba(250, 247, 242, 0.1);
+
+  --md-typeset-color: var(--pf-paper-50);
+  --md-typeset-a-color: var(--pf-amber-400);
+
+  --md-code-bg-color: var(--pf-navy-900);
+  --md-code-fg-color: var(--pf-paper-50);
+
+  --md-footer-bg-color: var(--pf-navy-900);
+  --md-footer-bg-color--dark: var(--pf-navy-950);
+  --md-footer-fg-color: var(--pf-paper-50);
+}
+
+/* The two-ink structure carries across: amber for links, ember for code. */
+[data-md-color-scheme="slate"] .md-typeset :not(pre) > code {
+  color: var(--pf-ember-400);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-code-hl-keyword-color: var(--pf-ember-400);
+  --md-code-hl-constant-color: var(--pf-ember-400);
+  --md-code-hl-special-color: var(--pf-ember-400);
+  --md-code-hl-function-color: var(--pf-paper-50);
+  --md-code-hl-string-color: var(--pf-amber-400);
+  --md-code-hl-number-color: var(--pf-amber-400);
+  --md-code-hl-name-color: var(--pf-paper-50);
+  --md-code-hl-variable-color: var(--pf-paper-50);
+  --md-code-hl-operator-color: rgba(250, 247, 242, 0.75);
+  --md-code-hl-punctuation-color: rgba(250, 247, 242, 0.75);
+  --md-code-hl-comment-color: rgba(250, 247, 242, 0.65);
+  --md-code-hl-generic-color: rgba(250, 247, 242, 0.65);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .md-button--primary {
+  background-color: var(--pf-amber-400);
+  border-color: var(--pf-amber-400);
+  color: var(--pf-navy-950);
+}
+
+[data-md-color-scheme="default"] .md-typeset .md-button--primary {
+  background-color: var(--pf-navy-900);
+  border-color: var(--pf-navy-900);
+  color: var(--pf-paper-50);
+}
+
+/* --------------------------------------------------------------- surfaces */
+
+.md-typeset .grid.cards > ul > li {
+  border-radius: 0.4rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li {
+  background-color: var(--pf-navy-900);
+  border-color: rgba(239, 123, 85, 0.2);
+}
+
+/* Diagrams with their own ground baked in: no card or border around them. */
+.md-typeset img.pf-figure {
+  display: block;
+  width: 100%;
+  max-width: 50rem;
+  margin: 1.5rem auto;
+  border-radius: 0.4rem;
+}
+
+/* The display rule above outranks Material's scheme switch for images, so the
+ * switch is restated for figures: each ladder drawing shows in one scheme only. */
+[data-md-color-scheme="default"] .md-typeset img.pf-figure[src$="#only-dark"],
+[data-md-color-scheme="slate"] .md-typeset img.pf-figure[src$="#only-light"] {
+  display: none;
+}
+
+/* Brand artwork shown on the ground it was drawn for, whatever the scheme:
+ * bright inks on navy, deep inks on paper. */
+.md-typeset img.pf-on-navy,
+.md-typeset img.pf-on-paper {
+  padding: 0.8rem;
+  border-radius: 0.4rem;
+  box-sizing: content-box;
+}
+
+.md-typeset img.pf-on-navy {
+  background-color: var(--pf-navy-900);
+}
+
+.md-typeset img.pf-on-paper {
+  background-color: var(--pf-paper-50);
+}
+
+/* The mark carries its own colour; never let the theme tint it. */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  filter: none;
+}
+
+/* ----------------------------------------------------------------- swatches */
+
+/* Swatch chips on the theme and brand pages. The chip colour is set inline from
+ * a theme file; the ring is a brand token so the chip reads on either scheme. */
+.md-typeset .pf-swatch {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+  margin-right: 0.35em;
+  border-radius: 0.2em;
+  box-shadow: 0 0 0 1px rgba(15, 29, 49, 0.35);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .pf-swatch {
+  box-shadow: 0 0 0 1px rgba(250, 247, 242, 0.35);
+}

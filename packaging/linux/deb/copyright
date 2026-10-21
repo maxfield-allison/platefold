@@ -1,0 +1,117 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Plate|Fold
+Upstream-Contact: https://github.com/maxfield-allison/platefold/issues
+Source: https://github.com/maxfield-allison/platefold
+Comment:
+ This package is built by the Plate|Fold project from its own release build.
+ The desktop program links the system's WebKitGTK. The command-line tool and
+ the export worker are a frozen Python application that carries its own
+ Python runtime, Python libraries, shared libraries and a Chromium headless
+ shell under /usr/lib/PlateFold/runtime. Each bundled component keeps its own
+ license, listed below; the license files named here are installed with it.
+
+Files: *
+Copyright: 2026 Maxfield Allison
+License: MIT
+
+Files: usr/bin/platefold-desktop
+Copyright: 2026 Maxfield Allison
+           Tauri Programme within The Commons Conservancy and contributors
+           The authors of the Rust crates recorded in the program's Cargo.lock
+License: MIT and (MIT or Apache-2.0)
+Comment:
+ The desktop program is built with Tauri and other Rust crates, which are
+ licensed under MIT or Apache-2.0 (a few under compatible permissive terms).
+ Their source and license files are available through Cargo from the
+ Cargo.lock in the Plate|Fold source.
+
+Files: usr/lib/PlateFold/runtime/_internal/platefold/browser/*
+Copyright: The Chromium Authors and the authors of its third-party components
+License: BSD-3-clause and other
+ Chromium is licensed under a BSD-style license. The complete license and the
+ notices of every third-party component it contains are in
+ /usr/lib/PlateFold/runtime/_internal/platefold/browser/LICENSE.headless_shell.
+
+Files: usr/lib/PlateFold/runtime/_internal/platefold/vendor/*
+Copyright: Knut Sveidqvist and the Mermaid contributors
+           The authors of Mermaid's bundled dependencies
+License: MIT and other
+ Mermaid is MIT-licensed; see
+ /usr/lib/PlateFold/runtime/_internal/platefold/vendor/mermaid.LICENSE. The
+ licenses of the dependencies bundled into it are in
+ /usr/lib/PlateFold/runtime/_internal/platefold/vendor/THIRD_PARTY_LICENSES.txt.
+
+Files: usr/lib/PlateFold/runtime/_internal/platefold/fonts/*
+Copyright: 2019 The Sora Project Authors
+           2020 The JetBrains Mono Project Authors
+License: OFL-1.1
+ Both font families are licensed under the SIL Open Font License 1.1. The
+ license texts are in
+ /usr/lib/PlateFold/runtime/_internal/platefold/fonts/Sora-OFL.txt and
+ /usr/lib/PlateFold/runtime/_internal/platefold/fonts/JetBrains-Mono-OFL.txt.
+
+Files: usr/lib/PlateFold/runtime/_internal/*.dist-info/*
+       usr/lib/PlateFold/runtime/_internal/pypdfium2*/*
+       usr/lib/PlateFold/runtime/_internal/PIL/*
+       usr/lib/PlateFold/runtime/_internal/babel/*
+       usr/lib/PlateFold/runtime/_internal/jsonschema*/*
+Copyright: The authors of each bundled Python distribution
+License: other
+ The Python libraries in the frozen runtime keep their own licenses: BSD
+ (Babel, Markdown, pypdf, Pygments, Mammoth, Cobble, tinycss2,
+ webencodings), MIT (attrs, jsonschema, jsonschema-specifications, openpyxl,
+ et-xmlfile, PyYAML, referencing, rpds-py), MIT-CMU (Pillow), Apache-2.0
+ (websocket-client), Apache-2.0 or BSD-2-clause (packaging), BSD-3-clause
+ and Apache-2.0 (pypdfium2 and PDFium), and the Python Software Foundation
+ License (defusedxml, typing-extensions). Each distribution's license text
+ is in its *.dist-info/licenses directory, or in its *.dist-info/METADATA
+ where the upstream wheel carries no separate file. PDFium's own
+ third-party notices are under
+ /usr/lib/PlateFold/runtime/_internal/pypdfium2-*.dist-info/licenses.
+
+Files: usr/lib/PlateFold/runtime/_internal/libpython3*
+       usr/lib/PlateFold/runtime/_internal/base_library.zip
+       usr/lib/PlateFold/runtime/_internal/python3*/*
+Copyright: 2001-2025 Python Software Foundation
+License: PSF-2.0
+ The Python interpreter and standard library are distributed under the
+ Python Software Foundation License Version 2. The complete text is at
+ https://docs.python.org/3.11/license.html.
+
+Files: usr/lib/PlateFold/runtime/_internal/lib*.so*
+Copyright: The authors of each library
+License: other
+ Shared libraries copied into the frozen runtime from the Debian 12 build
+ system, or from the Python wheels that bundle them (the names with a hash
+ suffix, from Pillow), each under its own license: LGPL-2.1+ (GLib, ATK,
+ AT-SPI, ALSA, libgcrypt, libgpg-error, util-linux's libblkid and libmount,
+ libsystemd and libudev), MPL-2.0 (NSS and NSPR), AFL-2.1 or GPL-2+ (D-Bus),
+ GPL-3+ with the GCC Runtime Library Exception (libgcc and libstdc++),
+ Apache-2.0 (OpenSSL), and MIT, BSD, Zlib, libpng, libtiff, IJG, FreeType
+ or similar permissive terms for the others. Debian's copyright files for
+ these libraries list their authors and complete terms. On Debian systems
+ the full texts of the LGPL-2.1, GPL-2, GPL-3, MPL-2.0 and Apache-2.0 are
+ in /usr/share/common-licenses.
+
+License: MIT
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache License, Version 2.0 is
+ in /usr/share/common-licenses/Apache-2.0.

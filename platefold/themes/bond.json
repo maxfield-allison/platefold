@@ -1,0 +1,27 @@
+{
+  "name": "bond",
+  "label": "Bond — burgundy",
+  "description": "Crisp white paper, burgundy headings and rose details.",
+  "mode": "light",
+  "colors": {
+    "page": "#ffffff",
+    "accent": "#8b2545",
+    "accent_soft": "#cf9aac",
+    "ink": "#30212a",
+    "ink_strong": "#481329",
+    "title": "#481329",
+    "heading": "#651b35",
+    "ink_soft": "#6e535e",
+    "rule": "#dbc6ce",
+    "surface": "#f3e5eb",
+    "surface_alt": "#fcf6f8",
+    "link": "#8b2545",
+    "diagram_fill": "#f0dce5",
+    "diagram_stroke": "#8b2545",
+    "diagram_text": "#30212a",
+    "diagram_alt_fill": "#eedfd1",
+    "diagram_note_fill": "#f3e5eb",
+    "diagram_note_stroke": "#cf9aac"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

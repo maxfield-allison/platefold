@@ -1,0 +1,27 @@
+{
+  "name": "forest",
+  "label": "Forest — moss",
+  "description": "Soft green paper with moss headings and sage diagrams.",
+  "mode": "light",
+  "colors": {
+    "page": "#f2f7ee",
+    "accent": "#326344",
+    "accent_soft": "#99b08a",
+    "ink": "#243328",
+    "ink_strong": "#163b25",
+    "title": "#163b25",
+    "heading": "#285237",
+    "ink_soft": "#5e705b",
+    "rule": "#c5d5bb",
+    "surface": "#e1ecd9",
+    "surface_alt": "#ebf2e4",
+    "link": "#326344",
+    "diagram_fill": "#d9e7cc",
+    "diagram_stroke": "#326344",
+    "diagram_text": "#243328",
+    "diagram_alt_fill": "#efe4c7",
+    "diagram_note_fill": "#e1ecd9",
+    "diagram_note_stroke": "#99b08a"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

@@ -1,0 +1,113 @@
+name: Bug Report
+description: Report a problem with Plate|Fold.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Plate|Fold. Please use synthetic or sanitized
+        input when possible. Markdown, images, PDFs, logs, and export reports can
+        contain private document content, local paths, or metadata.
+
+        Do **not** use this form for a suspected vulnerability. Follow the
+        repository's Security Policy and report it privately.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I removed private content, secrets, identifying paths, and metadata from anything attached here.
+          required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the problem and its effect on the exported document or application.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How can we reproduce or observe it?
+      description: Provide the smallest reproducible example you can. If it is intermittent, describe when it happens and how often.
+      placeholder: |
+        1. Export this minimal Markdown ...
+        2. Use theme and settings ...
+        3. Open page ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the affected page or diagram dimensions when layout is involved.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Plate|Fold version or commit
+      placeholder: "Paste the version shown by Plate|Fold, or a full commit SHA"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: distribution
+    attributes:
+      label: How did you run Plate|Fold?
+      options:
+        - Python package
+        - Windows installer
+        - Windows portable ZIP
+        - Linux AppImage
+        - Linux .deb
+        - macOS app or DMG
+        - Browser interface or HTTP API
+        - Container
+        - Source checkout
+        - Other development build
+    validations:
+      required: true
+
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system and architecture
+      placeholder: "Ubuntu 24.04 x86_64, Windows 11 x64, macOS 15 arm64, ..."
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser or render engine
+      description: Use the bundled browser identity from the export report when available.
+      placeholder: "Paste the engine value from the export report"
+
+  - type: textarea
+    id: report
+    attributes:
+      label: Sanitized export report
+      description: Paste the relevant parts of `_export-report.json` after removing private paths and document details.
+      render: json
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add sanitized screenshots, sample files, or other details that make the problem easier to reproduce.

@@ -1,0 +1,165 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "platefold"
+version = "1.0.0"
+description = "Turn Markdown, DOCX, XLSX, CSV and TSV (and DOC, ODT or RTF through an installed converter) into print-quality PDFs, with each wide diagram or table on a page it fits"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Maxfield Allison" }]
+keywords = [
+    "pdf",
+    "markdown",
+    "docx",
+    "xlsx",
+    "csv",
+    "tsv",
+    "mermaid",
+    "diagrams",
+    "print",
+    "document-conversion",
+]
+# List only the Python versions CI tests: the `python` job in
+# .github/workflows/ci.yml runs lint and unit tests on 3.11 and 3.13.
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+    "Topic :: Printing",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+
+dependencies = [
+    "Babel>=2.17,<3",          # CLDR plurals and locale-safe display formatting
+    "jsonschema>=4.23,<5",
+    "PyYAML>=6.0,<7",
+    "websocket-client>=1.7",  # DevTools Protocol transport (see platefold/cdp.py)
+    "markdown>=3.11",         # markdown -> HTML; 3.11 scans code spans in linear time
+    "Pygments>=2.18",         # syntax highlighting for fenced code blocks
+    "pypdf>=5.0",             # page counts, outline bookmarks, destinations
+    "Pillow>=13.0.0",         # image dimensions and downsampling; patched image codecs
+    "pypdfium2>=5.13,<6",     # first-page images for the desktop preview
+    "tinycss2>=1.5.1,<2",     # tokenize authored CSS before resource validation
+    "mammoth>=1.11,<1.12.2",
+    "defusedxml>=0.7,<1",
+    "openpyxl>=3.1.5,<4",
+]
+
+[project.optional-dependencies]
+server = [
+    "starlette>=0.48,<2",
+    "uvicorn>=0.35,<1",
+    "h11>=0.16,<1",           # request head limit in server_http.py (uvicorn's parser)
+    "pydantic>=2.11,<3",
+    "psutil>=7,<8",
+]
+dev = [
+    "httpx>=0.28,<1",  # ASGI API boundary tests
+    "pdfplumber>=0.11",  # blank-page regression check
+    "pytest>=8.0",
+    "cryptography>=46",  # release-evidence signature checks (tools/assemble_release.py)
+    "ruff==0.16.6",
+    "pyright==1.1.411",
+    "build>=1.2",
+    # Not used at runtime. Kept purely as a way to download a pinned Chromium
+    # for the self-contained build and for the cross-engine comparison test:
+    #     python -m playwright install chromium
+    "playwright>=1.50",
+]
+
+[project.urls]
+Homepage = "https://github.com/maxfield-allison/platefold"
+Documentation = "https://maxfield-allison.github.io/platefold/"
+Source = "https://github.com/maxfield-allison/platefold"
+Issues = "https://github.com/maxfield-allison/platefold/issues"
+Changelog = "https://github.com/maxfield-allison/platefold/blob/main/CHANGELOG.md"
+
+[project.scripts]
+platefold = "platefold.cli:main"
+
+[project.gui-scripts]
+platefold-gui = "platefold.gui:main"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["platefold", "platefold.*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+platefold = ["themes/*.json", "schemas/*.json", "locales/*.json", "vendor/*", "fonts/*", "web/index.html", "web/assets/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "C90",  # mccabe complexity
+    "SIM",  # flake8-simplify
+    "RUF",
+]
+ignore = [
+    # The print stylesheet in style.py is one long f-string of CSS; line length
+    # there tracks the CSS, not the Python.
+    "E501",
+
+    # --- deferred modernization, not permanent exemptions --------------------
+    # UP031 (%-formatting -> format specifiers) fires 39 times, almost all of it
+    # inside the HTML-emitting code in document.py and style.py. Ruff can only
+    # fix it with --unsafe-fixes, and a subtle break there produces silently
+    # wrong PDFs. Re-enable and fix it once the test suite covers the TOC and
+    # metadata paths, which the current sample document does not reach.
+    "UP031",
+]
+
+# PTH (flake8-use-pathlib) is deliberately not selected yet, for the same
+# reason: the pipeline is written throughout against os.path, and converting it
+# is a real refactor of validated code rather than a formatting pass. Both of
+# these belong on their own branch with a full smoke test afterwards.
+
+[tool.ruff.lint.per-file-ignores]
+"tools/*" = ["T201"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+# Used by the explicit preview PLR1702 command in `just lint` and CI. Level
+# zero is the function body; four nested control blocks is the hard ceiling.
+max-nested-blocks = 4
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "integration: drives a real headless Chromium and writes real PDFs (slow)",
+]
+
+[tool.pyright]
+include = ["platefold"]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"
+venvPath = "."
+venv = ".venv"

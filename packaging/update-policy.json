@@ -1,0 +1,11 @@
+{
+  "artifact_public_keys": [
+    "RWSO7cwhqbfTwlTR5NT1i22N1Mtmr6RXvR3tLmYguDJuOZom81hjJ0TZ"
+  ],
+  "public_keys": [
+    "RWTbt7FW+qKiMbbl6ytPer7SFupFueQAzgp1C9Uq48l1Qjx6xRaGcNNW"
+  ],
+  "stable": "https://maxfield-allison.github.io/platefold-updates/stable.json",
+  "prerelease": "https://maxfield-allison.github.io/platefold-updates/prerelease.json",
+  "artifact_url_prefix": "https://github.com/maxfield-allison/platefold/releases/download/"
+}

@@ -1,0 +1,9 @@
+{
+  "name": "platefold-vendor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Vendored mermaid.js used by the Python renderer. No JS is executed outside the headless browser.",
+  "dependencies": {
+    "mermaid": "11.16.1"
+  }
+}

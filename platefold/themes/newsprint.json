@@ -1,0 +1,27 @@
+{
+  "name": "newsprint",
+  "label": "Newsprint — sepia",
+  "description": "Aged paper with espresso ink, rust rules and tan tables.",
+  "mode": "light",
+  "colors": {
+    "page": "#f3e7cc",
+    "accent": "#9a4629",
+    "accent_soft": "#c49b71",
+    "ink": "#382b20",
+    "ink_strong": "#2d2016",
+    "title": "#2d2016",
+    "heading": "#794027",
+    "ink_soft": "#765f4a",
+    "rule": "#d0b795",
+    "surface": "#e5d3af",
+    "surface_alt": "#eddfc2",
+    "link": "#9a4629",
+    "diagram_fill": "#e5cd9e",
+    "diagram_stroke": "#9a4629",
+    "diagram_text": "#382b20",
+    "diagram_alt_fill": "#d6dcc0",
+    "diagram_note_fill": "#e5d3af",
+    "diagram_note_stroke": "#c49b71"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

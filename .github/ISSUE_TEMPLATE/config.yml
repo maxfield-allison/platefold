@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://maxfield-allison.github.io/platefold/
+    about: Guides, configuration reference and known limits.
+  - name: Report a security vulnerability privately
+    url: https://github.com/maxfield-allison/platefold/security/advisories/new
+    about: Please don't open a public issue for a suspected vulnerability. See SECURITY.md.

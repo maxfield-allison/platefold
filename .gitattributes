@@ -1,0 +1,11 @@
+# Portable source files; Windows launchers retain CRLF.
+* text=auto eol=lf
+
+# Batch files are the end-user entry points and break outright with LF endings.
+*.bat text eol=crlf
+
+# Never normalise binaries or the vendored lockfile's integrity hashes.
+*.png binary
+*.jpg binary
+*.pdf binary
+platefold/vendor/* -text -diff linguist-vendored

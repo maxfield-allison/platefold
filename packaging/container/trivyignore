@@ -1,0 +1,7 @@
+# Reviewed exceptions to the container image vulnerability gate.
+#
+# The release scan fails on any fixed HIGH or CRITICAL finding. The usual fix
+# is to move DEBIAN_SNAPSHOT, a base image digest or a Python lock forward and
+# rebuild. Add an entry here only when the finding cannot affect PlateFold, one
+# vulnerability ID per line, with a comment giving the reason and a date to
+# look at it again. The scan records this file's hash with its result.

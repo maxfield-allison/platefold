@@ -1,0 +1,1 @@
+Markdown, Word and Excel to tagged PDFs, with pages sized to fit wide diagrams. amd64 and arm64.

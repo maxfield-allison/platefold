@@ -1,0 +1,27 @@
+{
+  "name": "slate",
+  "label": "Slate — teal",
+  "description": "Cool grey paper with teal headings and blue-green panels.",
+  "mode": "light",
+  "colors": {
+    "page": "#edf4f5",
+    "accent": "#176878",
+    "accent_soft": "#8eafb8",
+    "ink": "#243b43",
+    "ink_strong": "#183e49",
+    "title": "#183e49",
+    "heading": "#205664",
+    "ink_soft": "#546f78",
+    "rule": "#c0d2d7",
+    "surface": "#dae9ed",
+    "surface_alt": "#e5eff2",
+    "link": "#176878",
+    "diagram_fill": "#d1e5e9",
+    "diagram_stroke": "#176878",
+    "diagram_text": "#243b43",
+    "diagram_alt_fill": "#e1e0ee",
+    "diagram_note_fill": "#dae9ed",
+    "diagram_note_stroke": "#8eafb8"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

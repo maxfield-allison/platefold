@@ -1,0 +1,55 @@
+{
+  "source": "docs/samples/ladder-tour.md",
+  "command": "platefold docs/samples/ladder-tour.md -o <dir> --theme bristol --font sora --preset letter",
+  "source_sha256": "bb5a2f441f98bcb3b4c2a2a5d3b473975ffe4c8e9ba737f8c0489b6a24d2b3ae",
+  "engine": "bundled Chromium (HeadlessChrome/151.0.7922.34)",
+  "platform": "Linux",
+  "font_set": "sora",
+  "theme": "bristol",
+  "warnings": [],
+  "sha256": "5b8f96a5066c5709c6b015e00487a18b51433b40e6090f92a593855b083f86b1",
+  "pages": [
+    {
+      "page": 1,
+      "width_mm": 215.9,
+      "height_mm": 279.4,
+      "kind": "body"
+    },
+    {
+      "page": 2,
+      "width_mm": 279.4,
+      "height_mm": 215.9,
+      "kind": "letter-landscape"
+    },
+    {
+      "page": 3,
+      "width_mm": 215.9,
+      "height_mm": 279.4,
+      "kind": "body"
+    },
+    {
+      "page": 4,
+      "width_mm": 420.2,
+      "height_mm": 297.0,
+      "kind": "a3-landscape"
+    },
+    {
+      "page": 5,
+      "width_mm": 215.9,
+      "height_mm": 279.4,
+      "kind": "body"
+    },
+    {
+      "page": 6,
+      "width_mm": 686.1,
+      "height_mm": 90.0,
+      "kind": "custom"
+    },
+    {
+      "page": 7,
+      "width_mm": 215.9,
+      "height_mm": 279.4,
+      "kind": "body"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "identifier": "main",
+  "description": "Local application event subscription, and the zoom level that zoomHotkeysEnabled sets on macOS and Linux. Native file and worker operations are implemented in Rust.",
+  "windows": ["main"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:webview:allow-set-webview-zoom"
+  ]
+}

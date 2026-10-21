@@ -1,0 +1,141 @@
+site_name: Plate|Fold
+site_description: Documents to PDF with every figure on a page that fits.
+site_author: Maxfield Allison
+site_url: https://maxfield-allison.github.io/platefold/
+repo_url: https://github.com/maxfield-allison/platefold
+edit_uri: edit/main/docs/
+
+copyright: Copyright &copy; 2026 Maxfield Allison
+
+strict: true
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+# Zensical builds from a staged copy of docs/: tools/prepare_docs.py expands the
+# generated reference tables, adds the vendored Mermaid and leaves out
+# docs/samples. Run it before every build.
+docs_dir: build/docs-site
+
+theme:
+  name: material
+  # Zensical's classic look matches the Material for MkDocs theme brand.css
+  # was written against.
+  variant: classic
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+  # Fonts are self-hosted in stylesheets/fonts; false stops Material loading
+  # them from Google Fonts.
+  font: false
+  features:
+    - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  logo: assets/brand/mark-bright.svg
+  favicon: assets/brand/favicon.svg
+
+extra_css:
+  - stylesheets/brand.css
+
+# Loading the vendored Mermaid first means the theme uses it instead of fetching
+# its own copy from unpkg. tools/prepare_docs.py copies the file out of
+# platefold/vendor.
+extra_javascript:
+  - assets/javascripts/mermaid.min.js
+
+extra:
+  generator: false
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets:
+      base_path: [docs/samples, .]
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search:
+      # The browser compiles this as a Unicode regex, where an escaped
+      # underscore is a syntax error that only shows when someone searches.
+      separator: '[\s.\-_|]+'
+
+nav:
+  - Home: index.md
+  - Get started:
+      - get-started/index.md
+      - Windows: get-started/windows.md
+      - macOS: get-started/macos.md
+      - Linux: get-started/linux.md
+      - Your first export: get-started/first-export.md
+  - Guides:
+      - Input formats: guides/input-formats.md
+      - How pages are chosen: guides/placement.md
+      - Printing and assembling tiles: guides/tiles.md
+      - Themes: guides/themes.md
+      - Fonts and pagination: guides/fonts.md
+      - Accessibility: guides/accessibility.md
+      - Automation: automation.md
+      - Browser exports: guides/server.md
+      - Containers: guides/container.md
+      - Windows desktop: windows-desktop.md
+      - Desktop update checks: guides/updates.md
+      - Things that will bite you: guides/troubleshooting.md
+  - Reference:
+      - Configuration: reference/configuration.md
+      - Command line: reference/cli.md
+      - Sample PDF: reference/sample.md
+  - Project:
+      - Release status: project/status.md
+      - In development: project/in-development.md
+      - Translating Plate|Fold: project/translating.md
+      - Verifying downloads: project/verification.md
+      - Security: project/security.md
+      - Other tools: project/alternatives.md
+      - Brand guide: project/brand.md

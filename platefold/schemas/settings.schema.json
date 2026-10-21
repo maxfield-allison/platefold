@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plate|Fold settings",
+  "description": "Settings for a folder or file of documents, in platefold.yml, platefold.yaml or platefold.json beside the input or named with --config. Every section and key is optional; command-line flags override the file.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional reference to this schema, for editors that validate against it. Ignored by Plate|Fold."
+    },
+    "page": {
+      "type": "object",
+      "description": "Paper, orientation, margins and output mode.",
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "enum": [
+            "auto",
+            "letter",
+            "legal",
+            "tabloid",
+            "a5",
+            "a4",
+            "a3",
+            "a2",
+            "a1",
+            "a0",
+            "ansi-c",
+            "ansi-d",
+            "ansi-e",
+            "uniform-letter"
+          ],
+          "description": "Page-size ladder preset."
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Sheet width in millimetres before orientation is applied; overrides the paper preset."
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Sheet height in millimetres before orientation is applied; overrides the paper preset."
+        },
+        "margin": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Top and side margins in millimetres."
+        },
+        "margin_bottom": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Bottom margin in millimetres."
+        },
+        "output_mode": {
+          "enum": [
+            "online",
+            "print",
+            "tiled"
+          ],
+          "description": "Online keeps flexible pages; print keeps whole figures on fixed paper; tiled preserves figure scale across sheets."
+        },
+        "margin_mode": {
+          "enum": [
+            "full",
+            "none",
+            "bottom-right"
+          ],
+          "description": "Blank margins on all edges, no edges, or only bottom and right."
+        },
+        "orientation": {
+          "enum": [
+            "portrait",
+            "landscape"
+          ],
+          "description": "Orientation of the selected body or print sheet."
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Locale region used for automatic print paper selection; unknown regions use A4."
+        },
+        "margin_edges": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "minimum": 0
+          },
+          "description": "Exact top, right, bottom and left margins in mm on every page. Overrides the margin preset; omits running headers and footers."
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "description": "Thresholds that decide when a figure moves to a larger page.",
+      "additionalProperties": false,
+      "properties": {
+        "inline_fit": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Minimum inline scale, at most one.",
+          "maximum": 1
+        },
+        "plate_fit": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Minimum plate scale, at most one.",
+          "maximum": 1
+        },
+        "max_custom_width": {
+          "type": "number",
+          "anyOf": [
+            {
+              "const": 0
+            },
+            {
+              "exclusiveMinimum": 24
+            }
+          ],
+          "description": "Maximum bespoke width in millimetres; greater than 24 for margins, or zero to disable."
+        },
+        "caption_px": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Vertical caption reservation in CSS pixels."
+        },
+        "tile_overlap": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Tiled print: millimetres of the figure repeated on both sheets where they meet; zero butts sheets edge to edge."
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "description": "Font set and body text size.",
+      "additionalProperties": false,
+      "properties": {
+        "font_set": {
+          "type": "string",
+          "description": "Named font set, using bundled or installed fonts."
+        },
+        "body_size_pt": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Body font size in points."
+        }
+      }
+    },
+    "behaviour": {
+      "type": "object",
+      "description": "Input handling, contents page, bookmarks, image resolution and Mermaid rendering.",
+      "additionalProperties": false,
+      "properties": {
+        "soft_breaks": {
+          "type": "boolean",
+          "description": "Keep single newlines."
+        },
+        "document_language": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Source document BCP 47 language override; empty uses source metadata. Independent of interface locale."
+        },
+        "csv_header": {
+          "type": "boolean",
+          "description": "Treat the first CSV or TSV row as a repeating table header."
+        },
+        "sheets": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "description": "XLSX sheets selected by exact name or one-based workbook index; empty means every visible worksheet."
+        },
+        "toc": {
+          "type": "boolean",
+          "description": "Generate a contents page when enough headings exist."
+        },
+        "bookmarks": {
+          "type": "boolean",
+          "description": "Add PDF outline bookmarks."
+        },
+        "toc_min_headings": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum headings for a contents page."
+        },
+        "image_dpi": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Placed raster resolution in dots per inch."
+        },
+        "mermaid_font_px": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Diagram label size in CSS pixels."
+        },
+        "mermaid_wrap_px": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Diagram label wrapping width in CSS pixels."
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "A base theme and optional per-colour overrides for this export.",
+      "additionalProperties": false,
+      "properties": {
+        "base": {
+          "type": "string",
+          "description": "Theme name or path relative to this settings file."
+        },
+        "page": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "the paper itself \u2014 body background"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "h1 rule, document header rule, code block spine"
+        },
+        "accent_soft": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "secondary borders drawn from the accent hue"
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "body text"
+        },
+        "ink_strong": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "bold text, table headers"
+        },
+        "title": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "document title and h1"
+        },
+        "heading": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "h2/h3/h4"
+        },
+        "ink_soft": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "captions, metadata labels, running header/footer"
+        },
+        "rule": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "hairlines and table cell borders"
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "table header fill, inline code chip"
+        },
+        "surface_alt": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "zebra striping, code block background"
+        },
+        "link": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "hyperlink text and string literals in code blocks"
+        },
+        "diagram_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid node fill"
+        },
+        "diagram_stroke": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid node borders and edges"
+        },
+        "diagram_text": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid labels, including edge labels on the page"
+        },
+        "diagram_alt_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid cluster and secondary fill"
+        },
+        "diagram_note_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid note fill"
+        },
+        "diagram_note_stroke": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Mermaid note border"
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Advanced resource ceilings for one export. Lower them for untrusted documents; raise one deliberately for an unusually large trusted document. Byte values are raw bytes.",
+      "properties": {
+        "max_markdown_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest Markdown file, in bytes, read as one document."
+        },
+        "max_html_tag_search_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most bytes, in total, that reading a Markdown file's raw HTML may search for the '>' that ends each tag. A '<' followed by a letter starts a tag, and one that never closes makes the HTML reader search the rest of the document, so repeated searches can have work proportional to the square of the document's size. The default is 16 MiB of search work; elapsed time depends on the document and machine."
+        },
+        "max_paragraph_rebuild_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most bytes the Markdown reader may copy while replacing the links, code spans, HTML tags and emphasis of one paragraph. It copies the whole paragraph once per element, so the time grows with the number of elements times the paragraph's length. The default is 2 GiB of cumulative copying work; it is not a document-size limit or an elapsed-time guarantee."
+        },
+        "max_csv_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest CSV or TSV file, in bytes, read as one document."
+        },
+        "max_csv_rows": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most logical rows in one CSV or TSV table. A quoted field that spans lines is one row."
+        },
+        "max_csv_columns": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most columns in any row of one CSV or TSV table."
+        },
+        "max_csv_cells": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most cells in one CSV or TSV table, counted across all rows."
+        },
+        "max_csv_field_characters": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most characters in a single CSV or TSV field."
+        },
+        "max_archive_entries": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most files inside one DOCX or XLSX package, which is a ZIP archive. The temporary-file allowance for a legacy-format converter scales with it."
+        },
+        "max_archive_expanded_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most bytes one DOCX or XLSX package may hold, both as the ZIP file on disk and once decompressed. Also caps the DOCX a legacy-format converter may produce."
+        },
+        "max_docx_xml_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most XML elements plus attributes parsed from one DOCX package, counted across all its parts as they stream in."
+        },
+        "max_xlsx_xml_nodes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most XML elements plus attributes parsed from one XLSX package, counted across all its parts as they stream in."
+        },
+        "max_sheet_cells": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest used range, in cells, read from one XLSX worksheet."
+        },
+        "max_sheet_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most sheets one XLSX workbook may declare, and the most entries behaviour.sheets may list."
+        },
+        "max_workbook_cells": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest combined used range, in cells, read across all the selected worksheets of one XLSX workbook."
+        },
+        "max_document_cells": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most table cells in one document of any format, counted after it is converted to HTML. Limits total table cells; max_cells_per_pass controls the size of each rendering part. These cell limits do not guarantee a maximum export time or memory use."
+        },
+        "max_cells_per_pass": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Table cells the browser lays out at once. A document with more is printed in parts and joined into one PDF with the pages a single pass would print. Content that cannot be split, such as rows joined by cells that span rows, prints in one pass of up to four times this value; a document with more such content stops with an error. Peak memory grows with this value, about 30 KB per cell."
+        },
+        "max_image_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest single image, in bytes, whether it is a linked file, an inline data URI or an image embedded in DOCX or XLSX."
+        },
+        "max_image_pixels": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most pixels (width times height) in one decoded image."
+        },
+        "max_gif_frames": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Most frames in one animated image."
+        },
+        "max_embedded_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total bytes of images and diagrams embedded into one document before it is printed to PDF."
+        },
+        "max_mermaid_source_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest Mermaid diagram source, in bytes."
+        },
+        "max_mermaid_svg_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest SVG, in bytes, that rendering one Mermaid diagram may produce."
+        },
+        "max_pdf_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Largest PDF, in bytes, written for one document."
+        },
+        "max_export_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Wall-clock time allowed for the whole export, in seconds, including any legacy-format conversion."
+        }
+      }
+    }
+  }
+}

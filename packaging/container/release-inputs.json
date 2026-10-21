@@ -1,0 +1,17 @@
+{
+  "debian_snapshot": "20260913T000000Z",
+  "github_repository": "maxfield-allison/platefold",
+  "node_image": "node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5",
+  "platforms": [
+    "linux/amd64",
+    "linux/arm64"
+  ],
+  "public_repositories": [
+    "ghcr.io/maxfield-allison/platefold",
+    "docker.io/probablyfinedev/platefold"
+  ],
+  "python_image": "python:3.13-slim@sha256:7ce4b6dfe35e55397b7cda544f8a13f191b7ae28dc5aad71fe664dbc9bc2623f",
+  "sbom_generator": "docker.io/docker/buildkit-syft-scanner@sha256:ae4f3b554449e7e25548e7d8ccc029d17357348e30c6e3df01b92bc93654d6a9",
+  "signing": "cosign",
+  "source_repository": "https://github.com/maxfield-allison/platefold"
+}
