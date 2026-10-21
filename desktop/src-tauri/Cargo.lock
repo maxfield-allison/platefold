@@ -2627,7 +2627,7 @@ checksum = "f6b464fbc74e149a392436b17d523f769e057cb6877f6a5c4618bc6f11800548"
 name = "platefold-desktop"
 version = "1.0.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "dunce",
  "futures-util",
  "libc",
@@ -3988,7 +3988,7 @@ dependencies = [
 name = "tauri-plugin-updater"
 version = "2.11.0"
 dependencies = [
- "base64 0.22.1",
+ "base64 0.23.1",
  "dirs",
  "flate2",
  "futures-util",
