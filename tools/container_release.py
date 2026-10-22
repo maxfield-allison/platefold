@@ -252,14 +252,29 @@ def public_source(sha, version, url):
     snapshot = snapshot_tools()
     with tempfile.TemporaryDirectory(prefix="platefold-snapshot-") as scratch:
         report = snapshot.build(sha, Path(scratch) / "public", packages=False)
-    if report.problems:
-        raise ValueError("the public snapshot of the build commit has problems")
-    # Anonymous read of the public repository; the tag is fetched, never moved.
-    run("git", "fetch", "--no-tags", "--depth=1", url, "refs/tags/" + version)
-    public_commit, public_tree, _ = resolve_commit(ROOT, "FETCH_HEAD")
-    listing = tree_listing_digest(ROOT, public_commit)
-    if listing != report.checks["public_listing_sha256"]:
-        raise ValueError(f"public tag {version} is not the public snapshot of the build commit")
+        if report.problems:
+            raise ValueError("the public snapshot of the build commit has problems")
+        # Compare archive exports on both sides: .bat files have CRLF there,
+        # while their committed blobs use LF. Keep the committed listing for
+        # signed source identity, and refuse hidden or non-regular tag files.
+        run("git", "fetch", "--no-tags", "--depth=1", url, "refs/tags/" + version)
+        public_commit, public_tree, _ = resolve_commit(ROOT, "FETCH_HEAD")
+        public_report = snapshot.Report()
+        names = snapshot.tracked_entries(public_commit, public_report)
+        contents = snapshot.extract(public_commit, set(names), Path(scratch) / "tag")
+        if (
+            public_report.problems
+            or set(contents) != set(names)
+            or snapshot.listing_digest(contents) != report.checks["public_listing_sha256"]
+        ):
+            raise ValueError(f"public tag {version} is not the public snapshot of the build commit")
+        exported = Path(scratch) / "public"
+        for name in contents:
+            if ((exported / name).stat().st_mode & 0o111) != (
+                (Path(scratch) / "tag" / name).stat().st_mode & 0o111
+            ):
+                raise ValueError(f"public tag changed the executable mode: {name}")
+        listing = tree_listing_digest(ROOT, public_commit)
     return {
         "version": version,
         "build_commit": sha,

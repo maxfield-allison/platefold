@@ -4,6 +4,8 @@ from pathlib import Path
 
 from starlette.responses import FileResponse
 
+from platefold.server_models import APIError, no_query
+
 UI_CSP = (
     "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
     "font-src 'self'; img-src 'self' data:; connect-src 'self'; "
@@ -40,9 +42,6 @@ def web_assets(directory: Path | None = None) -> dict[str, Path]:
 
 
 async def asset(request):
-    from platefold.server import no_query
-    from platefold.server_models import APIError
-
     no_query(request)
     path = request.app.state.web_assets.get(request.url.path)
     if path is None:

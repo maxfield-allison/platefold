@@ -13,7 +13,7 @@ uv run playwright install chromium
 
 Commit `uv.lock` whenever an intentional dependency change updates it. `requirements-runtime.txt` and `requirements-build.txt` are separate exact inputs for frozen native packages; do not regenerate or relax them as a side effect of ordinary development.
 
-The browser download supports integration tests and bundled builds. Playwright isn't part of the export runtime; Plate|Fold drives Chromium through its own DevTools Protocol client. Mermaid JavaScript is vendored in `platefold/vendor`, so normal development and export don't require npm. Node.js is needed when updating that vendored dependency.
+The browser download supports integration tests and bundled builds. Playwright isn't part of the export runtime; Plate|Fold drives Chromium through its own DevTools Protocol client. Mermaid JavaScript is vendored in `platefold/vendor`, so normal development and export don't require npm. Node.js is needed when updating that vendored dependency. Run `npm ci --ignore-scripts` and `python tools/vendor_mermaid.py` after reviewing changes to `package.json` and `package-lock.json`. The tool bundles the locked module graph, including the DOMPurify and KaTeX overrides, so patched dependencies reach the shipped JavaScript. It also refreshes the dependency inventory, license notices and bundle hash.
 
 Human interface translations follow the [translation contribution workflow](docs/project/translating.md). Generated or machine-translated catalogs are not accepted; pseudolocalization exists only as test data.
 

@@ -16,9 +16,9 @@ Plate|Fold measures each figure and each table before it prints. If it fits the 
 
 All four appear in the seven-page [sample PDF](reference/sample.md), exported from one Markdown file.
 
-!!! note "Release 1.0.0"
+!!! note "Release packages"
 
-    Windows installers are publisher-signed and timestamped, the Apple Silicon app is signed and notarized, and the Linux AppImage is checked in CI. Platform coverage differs; see [release status](project/status.md) before choosing a package.
+    Published Windows installers require publisher signing and timestamps, the Apple Silicon app requires signing and notarization, and Linux packages require their platform checks. See [release status](project/status.md) for availability, recorded coverage and remaining qualification.
 
 ## What it does
 

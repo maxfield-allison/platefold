@@ -106,9 +106,9 @@ where
 pub struct Config {
     /// Dangerously allow using insecure transport protocols for update endpoints.
     pub dangerous_insecure_transport_protocol: bool,
-    /// Dangerously accept invalid TLS certificates for update requests.
+    /// Compatibility field; PlateFold rejects disabling TLS certificate validation.
     pub dangerous_accept_invalid_certs: bool,
-    /// Dangerously accept invalid hostnames for TLS certificates for update requests.
+    /// Compatibility field; PlateFold rejects disabling TLS hostname validation.
     pub dangerous_accept_invalid_hostnames: bool,
     /// Updater endpoints.
     pub endpoints: Vec<Url>,
@@ -139,6 +139,11 @@ impl<'de> Deserialize<'de> for Config {
         }
 
         let config = Config::deserialize(deserializer)?;
+        if config.dangerous_accept_invalid_certs || config.dangerous_accept_invalid_hostnames {
+            return Err(serde::de::Error::custom(
+                "PlateFold updater requires TLS certificate and hostname validation",
+            ));
+        }
 
         validate_endpoints(
             &config.endpoints,
@@ -176,4 +181,32 @@ pub(crate) fn validate_endpoints(
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Config;
+
+    #[test]
+    fn default_configuration_preserves_certificate_and_hostname_validation() {
+        let config: Config =
+            serde_json::from_value(serde_json::json!({"pubkey": "fixture"})).unwrap();
+        assert!(!config.dangerous_accept_invalid_certs);
+        assert!(!config.dangerous_accept_invalid_hostnames);
+    }
+
+    #[test]
+    fn rejects_each_tls_validation_bypass_in_configuration() {
+        for flag in [
+            "dangerousAcceptInvalidCerts",
+            "dangerousAcceptInvalidHostnames",
+            "dangerous-accept-invalid-certs",
+            "dangerous-accept-invalid-hostnames",
+        ] {
+            let mut value = serde_json::json!({"pubkey": "fixture"});
+            value[flag] = serde_json::Value::Bool(true);
+            let result = serde_json::from_value::<Config>(value);
+            assert!(result.unwrap_err().to_string().contains("requires TLS"));
+        }
+    }
 }

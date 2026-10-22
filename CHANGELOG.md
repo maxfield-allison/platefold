@@ -6,6 +6,13 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.1] - 2026-10-22
+
+### Security
+
+- Rebuild the bundled diagram renderer with patched DOMPurify and KaTeX dependencies, and require certificate and hostname validation for updater requests.
+
+
 ## [1.0.0] - 2026-10-20
 
 First public release.

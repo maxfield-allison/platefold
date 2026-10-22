@@ -2175,7 +2175,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
 
-dompurify 3.4.13 / LICENSE
+dompurify 3.4.17 / LICENSE
 
 
                                  Apache License
@@ -2381,7 +2381,7 @@ dompurify 3.4.13 / LICENSE
    limitations under the License.
 
 
-dompurify 3.4.13 / LICENSE-MPL
+dompurify 3.4.17 / LICENSE-MPL
 
 Mozilla Public License Version 2.0
 ==================================
@@ -2928,7 +2928,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
 
-katex 0.16.47 / LICENSE
+katex 0.18.2 / LICENSE
 
 The MIT License (MIT)
 

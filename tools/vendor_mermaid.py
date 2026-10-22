@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,8 +18,24 @@ def main() -> None:
     vendor = ROOT / "platefold/vendor"
     vendor.mkdir(exist_ok=True)
     mermaid = ROOT / "node_modules/mermaid"
-    blob = (mermaid / "dist/mermaid.min.js").read_bytes()
-    (vendor / "mermaid.min.js").write_bytes(blob)
+    # Mermaid's prebuilt UMD contains its publisher's older transitive packages.
+    # Bundle the locked module graph so DOMPurify overrides reach shipped code.
+    subprocess.run(
+        [
+            str(ROOT / "node_modules/.bin/esbuild"),
+            "tools/mermaid_entry.mjs",
+            "--bundle",
+            "--format=iife",
+            "--platform=browser",
+            "--target=es2020",
+            "--minify",
+            "--legal-comments=inline",
+            "--outfile=platefold/vendor/mermaid.min.js",
+        ],
+        cwd=ROOT,
+        check=True,
+    )
+    blob = (vendor / "mermaid.min.js").read_bytes()
     (vendor / "mermaid.LICENSE").write_bytes((mermaid / "LICENSE").read_bytes())
     notices = []
     packages = []
@@ -46,6 +63,10 @@ def main() -> None:
     manifest = {
         "mermaid_version": lock["packages"]["node_modules/mermaid"]["version"],
         "sha256": hashlib.sha256(blob).hexdigest(),
+        "bundler": {
+            "name": "esbuild",
+            "version": lock["packages"]["node_modules/esbuild"]["version"],
+        },
         "npm_dependency_inventory": packages,
     }
     (vendor / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

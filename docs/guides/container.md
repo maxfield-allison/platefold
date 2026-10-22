@@ -2,7 +2,7 @@
 
 The Linux image, for amd64 and arm64, includes the CLI, authenticated browser server, Chromium, Mermaid and fonts. Noto system fallback fonts include Chinese, Japanese and Korean coverage; fonts installed only on your workstation are not available to the server. Exports need no runtime downloads.
 
-Releases from 1.0.0 publish a multi-architecture image as `ghcr.io/maxfield-allison/platefold` and `probablyfinedev/platefold` on Docker Hub, tagged `vX.Y.Z` and `latest`. Pin a version tag, or better its digest, for deployment. You can also build the image from the release source, as below.
+Published releases provide a multi-architecture image as `ghcr.io/maxfield-allison/platefold` and `probablyfinedev/platefold` on Docker Hub, tagged `vX.Y.Z` and `latest`. Pin a version tag, or better its digest, for deployment. You can also build the image from the release source, as below.
 
 ## Build and check the image
 

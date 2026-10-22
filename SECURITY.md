@@ -64,17 +64,21 @@ These checks reduce risk, but they are not a guarantee. The retained SBOM descri
 
 ## Desktop update trust
 
-In-app updates use two separate keys, both pinned in the application. The metadata key signs the update feed: which release is offered, its notes, and a validity of at most seven days, renewed daily by an automated job. The artifact key, held only by the protected release process, signs each installer. That signature also names the installer's version, platform and file name in its Minisign trusted comment, which the signature covers.
+In-app updates use two separate keys, both pinned in the application. When an updater feed is published, the metadata key signs which release is offered, its notes, and a validity of at most seven days. The repository includes a daily renewal workflow; see [release status](https://maxfield-allison.github.io/platefold/project/status/) for qualification and publication state. The artifact key, held only by the protected release process, signs each installer. That signature also names the installer's version, platform and file name in its Minisign trusted comment, which the signature covers.
 
 The app installs an update only when the feed's metadata signature verifies, the version is newer than the installed one, the installer is downloaded from the project's own GitHub release for that version, and the downloaded installer matches its signed size and SHA-256 and carries an artifact-key signature naming exactly the offered version, platform and file. The release-download location is compiled into the app, so the feed cannot point a download anywhere else. The release checks refuse to publish a feed that fails the same test.
 
 Someone who obtains the metadata key can withhold updates, write the release notes shown with an offer, and choose which signed release newer than a user's installed version is offered, including one older than the latest. They cannot make the app install bytes the artifact key did not sign, relabel a signed build as another version, or send the download to another host. Closing the remaining choice of release needs an index of releases signed by the release key; that is planned for a later version, before choosing among older releases becomes possible.
 
+Updater requests retain TLS certificate and hostname validation; configuration that requests either bypass is rejected.
+
 The app never asks for an administrator password to update. A copy in a folder your account can't change, such as an app another account installed, shows manual update steps instead.
 
-## Known advisories in bundled components
+## Bundled renderer dependencies
 
-The bundled Mermaid renderer contains DOMPurify 3.4.0 and KaTeX 0.16.45, which are in the ranges of advisories GHSA-p98j-92pf-mc4p, GHSA-6688-9rhm-gjv2 and GHSA-238p-pmpm-9mq7. As Plate|Fold calls Mermaid, none of them is reachable: the DOMPurify advisories need its `IN_PLACE` mode on a live page element, which Mermaid does not use, and the KaTeX advisory needs an attacker to have already polluted JavaScript's object prototype. Diagrams also render under a content security policy that blocks scripts and network requests. The bundle will be replaced when Mermaid ships with patched versions.
+The diagram renderer is bundled from the reviewed npm lockfile, including pinned DOMPurify and KaTeX security overrides. It does not copy Mermaid's prebuilt bundle, which can contain older dependencies even after a lockfile update. `platefold/vendor/manifest.json` records the bundled dependency inventory and JavaScript hash; `THIRD_PARTY_LICENSES.txt` retains the dependency notices. The refresh commands are in [CONTRIBUTING.md](https://github.com/maxfield-allison/platefold/blob/main/CONTRIBUTING.md).
+
+The renderer uses Mermaid's strict security mode and a content security policy that restricts external requests. These controls complement dependency updates; they do not establish that every possible malicious document is safe.
 
 ## Coordinated disclosure
 

@@ -75,11 +75,18 @@ def test_every_documented_download_is_a_published_file_name(source, name):
 
 def test_release_notes_do_not_deny_a_package_the_release_requires():
     notes = text(REPO / "CHANGELOG.md")
-    latest = next(
+    releases = (
         section for section in notes.split("\n## [") if re.match(r"\d+\.\d+\.\d+\]", section)
     )
-    limits = latest.split("### Known limits", 1)[1]
-    denial = next(line for line in limits.splitlines() if re.search(r"\bNo .*packages", line))
+    # Patch notes need not repeat the first release's platform limits. Check
+    # every actual package denial rather than requiring that repeated section.
+    denials = [
+        line
+        for section in releases
+        for line in section.splitlines()
+        if re.search(r"\bNo .*packages", line)
+    ]
+    assert denials, "Keep coverage of the documented package limitations"
     labels = {
         "linux-deb": "`.deb`",
         "linux-appimage": "AppImage",
@@ -89,7 +96,8 @@ def test_release_notes_do_not_deny_a_package_the_release_requires():
     }
     for kind, label in labels.items():
         assert kind in release.REQUIRED_KINDS
-        assert label not in denial, f"Known limits deny {label}, which every release requires"
+        for denial in denials:
+            assert label not in denial, f"Known limits deny {label}, which every release requires"
 
 
 def test_svg_limit_is_online_only(tmp_path):

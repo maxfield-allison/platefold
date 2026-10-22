@@ -31,7 +31,7 @@ from platefold.browser import find_bundled, find_system
 from platefold.contrast import RULES, contrast_failures
 from platefold.paths import resource_root
 from platefold.server_jobs import JobStore
-from platefold.server_models import TERMINAL, APIError, JobLimits, JobRequest, Mount
+from platefold.server_models import TERMINAL, APIError, JobLimits, JobRequest, Mount, no_query
 from platefold.server_sources import InvalidSource, parts_for
 from platefold.server_web import UI_CSP, asset, web_assets
 from platefold.theme import COLOR_TOKENS, available_font_sets, discover_themes
@@ -276,14 +276,6 @@ class SecurityBoundary:
                 raise
             response = error_response(500, "internal_error", "Request could not be completed")
             return await response(scope, receive, secure_send)
-
-
-def no_query(request: Request, allowed: set[str] | None = None) -> None:
-    keys = list(request.query_params.keys())
-    if set(keys) - (allowed or set()) or any(
-        len(request.query_params.getlist(k)) != 1 for k in keys
-    ):
-        raise APIError(400, "invalid_query", "Unexpected or repeated query parameter")
 
 
 async def read_json(request: Request) -> dict:

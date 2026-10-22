@@ -311,7 +311,6 @@ class JobStore:
                 self.tasks[job.id] = asyncio.create_task(self.run(job))
 
     async def run(self, job: Job) -> None:
-        result, error = None, "worker_failed"
         try:
             if job.state != "queued":
                 return

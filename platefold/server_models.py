@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from starlette.requests import Request
 
 from platefold.accessibility import valid_language
 from platefold.config import PRESETS, make_settings
@@ -18,6 +19,14 @@ class APIError(Exception):
     def __init__(self, status: int, code: str, message: str):
         super().__init__(message)
         self.status, self.code, self.message = status, code, message
+
+
+def no_query(request: Request, allowed: set[str] | None = None) -> None:
+    keys = list(request.query_params.keys())
+    if set(keys) - (allowed or set()) or any(
+        len(request.query_params.getlist(k)) != 1 for k in keys
+    ):
+        raise APIError(400, "invalid_query", "Unexpected or repeated query parameter")
 
 
 class StrictModel(BaseModel):

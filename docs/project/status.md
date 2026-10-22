@@ -1,21 +1,23 @@
 # Release status
 
-**Plate|Fold 1.0.0 is the first public release.** Nothing on this page is a support commitment.
+**Plate|Fold 1.0.1 is undergoing release qualification.** The published 1.0.0 source tag remains available. Signed 1.0.1 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
 
-## What has been tested
+## Retained platform qualification
+
+The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.1 packages; a release manifest binds the exact source and delivered files.
 
 | | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Export engine | Packaged export and source tests | Browser export in CI | Packaged signed-runtime smoke |
 | Desktop package | Signed online/offline installers and unpacked ZIP | AppImage and `.deb`, each with embedded CLI and browser | Signed and notarized Apple Silicon DMG |
-| Native acceptance | Recorded tests: install, picker, preview, export, cancel/close, upgrade and uninstall | Standard-user Ubuntu preview plus package smoke in minimal Debian. The `.deb` installs, starts and purges cleanly in Ubuntu 24.04 and Debian 12 containers, and exports on Ubuntu 24.04 through the browser fallback; not yet walked through on an Ubuntu desktop | Gatekeeper and packaged-runtime automation |
-| In-app update path | Native older-to-newer rehearsal, including tamper, interruption and recovery cases | Native older-to-newer rehearsal from a user-owned AppImage, including tamper, interruption and failed-replacement cases. The administrator-managed `/opt` installation and the `.deb` update by hand | Signed artifact check and packaged update artifact |
+| Native acceptance | Recorded standard-user installation, launch, Markdown/table/Mermaid PDF export, valid updater handoff and uninstall | Standard-user Ubuntu desktop install, launch, preview, PDF export and uninstall, plus package smoke in minimal Debian and Ubuntu containers | Gatekeeper and packaged-runtime automation |
+| In-app update path | Metadata-signature rejection and a valid older-to-newer download, separate install consent, native installer handoff and standard-user relaunch. Bad-artifact, interruption and failed-replacement cases remain untested for this final Windows candidate | Native older-to-newer rehearsal from a user-owned AppImage, including tamper, interruption and failed-replacement cases. The administrator-managed `/opt` installation and the `.deb` update by hand | Signed artifact check and packaged update artifact |
 
-"Run in CI" means browser integration tests export real PDFs as an unprivileged user, with Chromium's sandbox on. Windows has the broadest hands-on coverage. The macOS package has signed-runtime evidence on Apple Silicon, but nobody has walked through its interface by hand, and closing the app during an export has not been observed on a real Mac. Linux has package and container evidence but less desktop interaction coverage.
+"Run in CI" means browser integration tests export real PDFs as an unprivileged user, with Chromium's sandbox on. Windows has the broadest hands-on coverage. The macOS package has signed-runtime evidence on Apple Silicon, but nobody has walked through its interface by hand, and closing the app during an export has not been observed on a real Mac. Linux also has standard-user desktop and updater evidence; neither Linux nor earlier Windows tests substitute for a new Windows package check.
 
-## What is not part of 1.0.0
+## Scope and limits
 
 - Native screen-reader acceptance or a PDF/UA conformance claim
 - Intel macOS, Windows on Arm, Linux on Arm desktop packages, `.rpm` or MSI packages. The Linux container supports amd64 and arm64.
@@ -32,7 +34,7 @@ Planned work for some of these is on [in development](in-development.md).
 - An English interface catalog, with `--ui-locale` selection and English fallback. No other language ships, and none will be machine-translated; see [translating](translating.md).
 - Resource limits and link handling, described in [security](security.md)
 - Release checks for lint, unit, browser and desktop-shell tests, plus secrets and dependency vulnerability scans and signed package builds. Build and signing CI runs separately from the public source repository.
-- SHA-256 checksums, source-bound build receipts, signed Windows and macOS packages, and signed update metadata and artifacts
+- Release tooling for SHA-256 checksums, source-bound build receipts, platform-signed packages, and signed update metadata and artifacts; package and feed publication remain separate release steps
 
 ## Known limitations
 
@@ -49,6 +51,6 @@ Planned work for some of these is on [in development](in-development.md).
 - **A damaged image inside an SVG file or a stylesheet prints blank without a warning.** Top-level images are checked; see [troubleshooting](../guides/troubleshooting.md#the-export-succeeded-with-broken-images).
 - **An Excel value can print as negative zero.** Under a number format such as `0`, a negative value that rounds to zero prints as `-0`.
 - **The update metadata key can select an older signed release.** It must still be newer than the installed version, but need not be the latest release. Artifact signatures prevent relabeling or changing the installer. See [update trust](security.md#desktop-update-trust).
-- **Bundled Mermaid has known dependency advisories.** Their prerequisites are absent from the configured rendering path; the affected dependencies still remain in the bundle. See [security](security.md#known-advisories-in-bundled-components).
+- **Renderer dependencies need continuing updates.** The 1.0.1 source bundles patched DOMPurify and KaTeX from the reviewed lockfile. See [bundled renderer dependencies](security.md#bundled-renderer-dependencies); a dependency audit is not a guarantee that every malicious document is safe.
 - **Excel charts aren't redrawn.** Each one becomes a visible warning box in the PDF; paste a static image into the worksheet instead.
 - **Some common Markdown extensions aren't supported.** Tables, fenced code with syntax highlighting, lists, attribute lists, HTML blocks and metadata lines work. Footnotes, task lists, maths, wikilinks and callouts don't.

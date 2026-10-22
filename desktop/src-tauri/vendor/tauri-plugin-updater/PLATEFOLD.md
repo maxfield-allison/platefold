@@ -23,3 +23,7 @@ cargo check --locked --target x86_64-pc-windows-gnu
 ```
 
 When upgrading, compare the changed files against the recorded upstream version, retain both licenses, and rerun the workspace tests and native installer qualification. Remove the local patch only when the replacement preserves authenticated metadata reuse, transport bounds, timeout propagation, signature verification, and a replacement that keeps the previous app until the new one is in place.
+
+## TLS validation
+
+The vendored client always keeps TLS certificate and hostname validation enabled for metadata requests and installer downloads. Configuration deserialization rejects either dangerous validation-bypass option when true, including its kebab-case alias. The client contains no branch that disables either check. Native release tests use an explicitly trusted test certificate rather than disabling verification.

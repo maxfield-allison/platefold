@@ -554,7 +554,6 @@ def _part_body(layout: Layout, plan: PartPlan, sizing: dict[int, list[int]]) -> 
     stop = cut.element if cut is not None else plan.end_element
     if index < stop:
         out.append(html[elements[index].start : elements[stop - 1].end])
-        index = stop
     if cut is not None:
         element = elements[cut.element]
         table = cut.table

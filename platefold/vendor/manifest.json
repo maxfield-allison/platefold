@@ -1,6 +1,10 @@
 {
   "mermaid_version": "11.16.1",
-  "sha256": "18327bef70d96fb505fe7287d9f6a7362ebf07ff6576ddfaffb1a06f3e1a2954",
+  "sha256": "08b03e22473a13162ea36d609b3cb3fe9d44548b3df9ee51330ddad738361a89",
+  "bundler": {
+    "name": "esbuild",
+    "version": "0.28.2"
+  },
   "npm_dependency_inventory": [
     {
       "name": "@antfu/install-pkg",
@@ -520,9 +524,9 @@
     },
     {
       "name": "dompurify",
-      "version": "3.4.13",
+      "version": "3.4.17",
       "license": "(MPL-2.0 OR Apache-2.0)",
-      "integrity": "sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ=="
+      "integrity": "sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w=="
     },
     {
       "name": "es-toolkit",
@@ -556,9 +560,9 @@
     },
     {
       "name": "katex",
-      "version": "0.16.47",
+      "version": "0.18.2",
       "license": "MIT",
-      "integrity": "sha512-Eeo8Ys1doU1z+x8AZsPpQu+p/QcZBI5PeOo7QGQdy2x2m0MU/hYagBbGOmXwr5KVbEfVuWv9LpnQWeehogurjg=="
+      "integrity": "sha512-3snve4y0SXTMequLim1FMiPvLGElySam0blN5xQZBqEY3lOJz1TnuaaiugnBZBqHzlSAGmFTYL7MCQkORuLKCA=="
     },
     {
       "name": "commander",

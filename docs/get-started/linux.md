@@ -19,7 +19,7 @@ Check the download against the release's `SHA256SUMS` (see [Verifying downloads]
 
 ```console
 sha256sum --check --ignore-missing SHA256SUMS
-sudo apt install ./platefold_1.0.0_amd64.deb
+sudo apt install ./platefold_1.0.1_amd64.deb
 ```
 
 Open **PlateFold** from the application menu, or run `platefold-desktop`, then follow [your first export](first-export.md#in-the-desktop-app). The `platefold` command is the CLI, and the `.deb` puts it on your `PATH`. To update, install the next release's `.deb` the same way; the app's **Updates** dialog tells you when one exists but does not download it. `sudo apt remove platefold` removes the program and its AppArmor profile and keeps your themes and settings. `LINUX-INSTALL.md`, which comes with each Linux release, has the details, including an administrator-managed AppImage at `/opt/platefold`.
@@ -33,7 +33,7 @@ Keep the AppImage in a folder your account owns, such as `~/Applications`: the a
 ```console
 sha256sum --check --ignore-missing SHA256SUMS
 mkdir -p ~/Applications
-install -m 0755 PlateFold_1.0.0_linux-x86_64.AppImage ~/Applications/PlateFold.AppImage
+install -m 0755 PlateFold_1.0.1_linux-x86_64.AppImage ~/Applications/PlateFold.AppImage
 ~/Applications/PlateFold.AppImage
 ```
 
@@ -87,7 +87,7 @@ platefold --version
 platefold --list-themes
 ```
 
-The first command prints the version, for example `Plate|Fold 1.0.0`. The second lists the ten built-in themes and eight font sets.
+The first command prints the version, for example `Plate|Fold 1.0.1`. The second lists the ten built-in themes and eight font sets.
 
 ## Where Plate|Fold keeps things
 

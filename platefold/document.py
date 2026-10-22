@@ -347,7 +347,6 @@ class Document:
                 allowed = allowed and path.is_relative_to(Path(self.root).resolve())
             except (ValueError, OSError):
                 allowed = False
-                path = Path(self.root)
             if not allowed or not path.is_file():
                 self.image_report.append(("MISSING", src))
                 name = html.escape(os.path.basename(urllib.parse.unquote(src)))
