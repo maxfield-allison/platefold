@@ -16,6 +16,8 @@ permissions:
 
 jobs:
   analyze:
+    # Public code scanning starts when the repository is public.
+    if: ${{ !github.event.repository.private }}
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     permissions:
