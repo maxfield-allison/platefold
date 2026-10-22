@@ -1,0 +1,148 @@
+# Plate|Fold settings file.
+#
+# Copy this beside your documents as platefold.yml and it is picked up
+# automatically, or pass it with --config path/to/platefold.yml. JSON works
+# too: save the same sections and keys as platefold.json. Command-line flags
+# override anything set here.
+#
+# Every section and key is optional. As shipped, each live value below is the
+# default, so copying this file changes nothing until you edit it. An unknown
+# section or a misspelled key is an error rather than a setting that quietly
+# does nothing. A section you keep needs at least one live key; comment out
+# the section line too if you comment out all of its keys.
+#
+# Editors with YAML schema support validate this file against the schema named
+# below. The path works inside a source checkout; after copying, point it at
+# platefold/schemas/settings.schema.json in your checkout or installed package.
+# yaml-language-server: $schema=platefold/schemas/settings.schema.json
+
+page:
+  # auto keeps the Letter layout for online output; print and tiled output
+  # pick Letter or A4 from the device locale. Or choose letter, legal,
+  # tabloid, a5, a4, a3, a2, a1, a0, ansi-c, ansi-d, ansi-e or uniform-letter.
+  preset: auto
+  output_mode: online # online | print | tiled
+  margin_mode: full # full | none | bottom-right
+  orientation: portrait # portrait | landscape
+  # locale: en-US # override the locale used for automatic print paper
+
+  # Fine geometry, in millimetres. Set these only if the preset isn't enough.
+  # width and height replace the preset's sheet size before orientation.
+  # width: 230
+  # height: 340
+  # margin: 15.0
+  # margin_bottom: 18.0
+  # Exact top, right, bottom, left margins on every page. Overrides
+  # margin_mode and drops the running header and footer.
+  # margin_edges: [0, 8, 12, 0]
+
+layout:
+  # How small a figure may get before it moves to a page of its own. Raising
+  # inline_fit pushes more diagrams onto plates: more readable, but more
+  # half-empty body pages. Lowering it does the reverse.
+  inline_fit: 0.8
+  # plate_fit: 0.85
+  # Widest page, in millimetres, sized to a single figure. 0 disables.
+  # max_custom_width: 900.0
+  # Vertical room reserved for a caption, in CSS pixels.
+  # caption_px: 52
+  # Tiled print only: millimetres of the figure repeated on both sheets where
+  # they meet, from 0 to 50. 0 butts the sheets edge to edge.
+  # tile_overlap: 10
+
+typography:
+  # sora (bundled, the default) | calibri | segoe | cambria | georgia | arial
+  # | apple | gnome
+  font_set: sora
+  # body_size_pt: 10.2
+
+theme:
+  # A built-in theme: default, bristol, bond, newsprint, graphite, midnight,
+  # carbon, slate, mono or forest. Or a theme file's path, relative to this
+  # file.
+  base: default
+
+  # Then override any colour for this export. Quote hex colours: an unquoted
+  # # starts a YAML comment. Unset colours come from the base theme; the
+  # values shown are the default theme's.
+  # page: "#ffffff"           # the paper itself
+  # accent: "#2f5d8c"         # h1 rule, document header rule, code block spine
+  # accent_soft: "#9bb6d1"    # secondary borders
+  # ink: "#17202b"            # body text
+  # ink_strong: "#0f2942"     # bold text, table headers
+  # title: "#0f2942"          # document title and h1
+  # heading: "#1c4a75"        # h2, h3, h4
+  # ink_soft: "#55697d"       # captions, metadata, running header and footer
+  # rule: "#d7dfe8"           # hairlines and table cell borders
+  # surface: "#eef3f8"        # table header fill, inline code
+  # surface_alt: "#f7f9fc"    # zebra striping, code block background
+  # link: "#1b5e9c"           # links and code string literals
+  #
+  # Mermaid diagram colours:
+  # diagram_fill: "#eef4fb"
+  # diagram_stroke: "#4a6fa5"
+  # diagram_text: "#12263f"
+  # diagram_alt_fill: "#f4f0e6"
+  # diagram_note_fill: "#fdf6dd"
+  # diagram_note_stroke: "#c9b458"
+
+behaviour:
+  # Keep single newlines as line breaks (Obsidian behaviour). Turn this off
+  # if your authors hard-wrap paragraphs.
+  soft_breaks: true
+
+  # The language of the source documents, as a BCP 47 tag such as en-GB. Empty
+  # uses the document's own metadata.
+  # document_language: en-GB
+
+  # CSV and TSV use their first row as a repeating table header.
+  csv_header: true
+
+  # XLSX exports every visible worksheet. List exact names or one-based
+  # indexes to export only those sheets.
+  # sheets: [Summary, "#2"]
+
+  # Contents page and PDF outline bookmarks.
+  toc: true
+  bookmarks: true
+  # toc_min_headings: 9
+
+  # Raster images are resampled to this DPI at their placed size. 300 is print
+  # quality; 150 roughly halves the file size for screenshot-heavy documents.
+  image_dpi: 300
+
+  # Mermaid rendering. Changing either invalidates the diagram cache, because
+  # both change a diagram's measured size and therefore its page.
+  # mermaid_font_px: 16
+  # mermaid_wrap_px: 260
+
+# Advanced resource ceilings for one export. The defaults are generous; lower
+# them for multi-tenant or otherwise untrusted workloads. Byte values are raw
+# bytes, not base64 characters. max_cells_per_pass sets how many table cells
+# the browser lays out at once; larger documents print in parts.
+limits:
+  max_markdown_bytes: 67108864
+  max_html_tag_search_bytes: 16777216
+  max_paragraph_rebuild_bytes: 2147483648
+  max_csv_bytes: 67108864
+  max_csv_rows: 100000
+  max_csv_columns: 512
+  max_csv_cells: 1000000
+  max_csv_field_characters: 1048576
+  max_archive_entries: 4096
+  max_archive_expanded_bytes: 536870912
+  max_docx_xml_nodes: 1000000
+  max_xlsx_xml_nodes: 6000000
+  max_sheet_cells: 1000000
+  max_sheet_count: 128
+  max_workbook_cells: 1000000
+  max_document_cells: 1000000
+  max_cells_per_pass: 25000
+  max_image_bytes: 134217728
+  max_image_pixels: 64000000
+  max_gif_frames: 500
+  max_embedded_bytes: 536870912
+  max_mermaid_source_bytes: 8388608
+  max_mermaid_svg_bytes: 67108864
+  max_pdf_bytes: 1073741824
+  max_export_seconds: 3600

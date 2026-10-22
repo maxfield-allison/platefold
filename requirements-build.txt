@@ -1,0 +1,16 @@
+-r requirements-runtime.txt
+
+# Native packaging inputs. Keep these exact so a release rebuild does not
+# silently acquire a different freezer or browser revision.
+build==1.6.0
+PyInstaller==6.22.2
+altgraph==0.17.5
+packaging==26.3
+playwright==1.62.0
+greenlet==3.5.5
+pyee==13.0.1
+pyinstaller-hooks-contrib==2026.7
+pyproject-hooks==1.2.0
+# The native jobs install the project itself without build isolation, so its
+# build backend is pinned here with the rest.
+setuptools==84.0.0

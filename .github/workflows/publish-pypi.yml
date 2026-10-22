@@ -1,0 +1,197 @@
+name: Publish verified Python distributions
+
+# Uploads the exact wheel and source distribution attached to an approved
+# GitHub Release. Nothing is built here: the files were built, checked and
+# listed in the signed release manifest before the release was published.
+#
+# Two jobs keep the publishing identity away from anything that runs project
+# code. `verify` checks the release-evidence signature, the manifest and both
+# archives with read-only access. `publish` holds the only id-token permission,
+# waits for approval in the protected `pypi` environment, re-checks the bytes
+# against the approved manifest digest and hands them to PyPI's Trusted
+# Publishing. No PyPI token is stored anywhere.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Approved immutable release tag, for example v1.0.0
+        required: true
+        type: string
+      source_sha:
+        description: Approved 40-character public source commit
+        required: true
+        type: string
+      manifest_sha256:
+        description: Approved SHA-256 of release-manifest.json
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-pypi
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify the release evidence and Python archives
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      APPROVED_TAG: ${{ inputs.tag }}
+      APPROVED_SOURCE_SHA: ${{ inputs.source_sha }}
+      APPROVED_MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Check the approved inputs
+        run: |
+          set -euo pipefail
+          [[ "${APPROVED_TAG}" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          [[ "${APPROVED_SOURCE_SHA}" =~ ^[0-9a-f]{40}$ ]]
+          [[ "${APPROVED_MANIFEST_SHA256}" =~ ^[0-9a-f]{64}$ ]]
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.source_sha }}
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - name: Check the tag names the approved commit
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${APPROVED_SOURCE_SHA}"
+          test "$(git rev-parse "refs/tags/${APPROVED_TAG}^{commit}")" = "${APPROVED_SOURCE_SHA}"
+      - name: Retrieve the release evidence and Python distributions
+        run: |
+          set -euo pipefail
+          mkdir handoff
+          gh release download "${APPROVED_TAG}" --repo "${GITHUB_REPOSITORY}" --dir handoff \
+            --pattern release-manifest.json --pattern SHA256SUMS --pattern SHA256SUMS.minisig \
+            --pattern 'platefold-*.whl' --pattern 'platefold-*.tar.gz'
+          test "$(sha256sum handoff/release-manifest.json | cut -d' ' -f1)" = \
+            "${APPROVED_MANIFEST_SHA256}"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.10"
+      - name: Verify the release-evidence signature and every digest
+        run: |
+          uv sync --locked --all-extras
+          uv run --no-sync python tools/assemble_release.py verify handoff \
+            --public-key packaging/release-evidence.pub --partial
+      - name: Check the manifest binding and archive contents
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import subprocess
+          import tarfile
+          import zipfile
+          from pathlib import Path, PurePosixPath
+
+          manifest = json.loads(Path("handoff/release-manifest.json").read_text())
+          if manifest["public_tag"] != os.environ["APPROVED_TAG"]:
+              raise SystemExit("release tag differs from the approved tag")
+          if manifest["public_source_commit"] != os.environ["APPROVED_SOURCE_SHA"]:
+              raise SystemExit("release source differs from the approved source")
+          tree = subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip()
+          if manifest["public_source_tree"] != tree:
+              raise SystemExit("release source tree differs from the approved commit")
+          if manifest["public_tag"] != "v" + manifest["version"]:
+              raise SystemExit("release tag and version disagree")
+
+          version = manifest["version"]
+          wheel_name = f"platefold-{version}-py3-none-any.whl"
+          sdist_name = f"platefold-{version}.tar.gz"
+          kinds = {item["name"]: item["kind"] for item in manifest["artifacts"]}
+          if kinds.get(wheel_name) != "python-wheel" or kinds.get(sdist_name) != "python-sdist":
+              raise SystemExit("manifest does not list the expected Python distributions")
+          downloaded = {
+              path.name
+              for path in Path("handoff").iterdir()
+              if path.name.endswith((".whl", ".tar.gz"))
+          }
+          if downloaded != {wheel_name, sdist_name}:
+              raise SystemExit(f"unexpected distributions: {sorted(downloaded)}")
+
+          def safe(member: str) -> bool:
+              path = PurePosixPath(member)
+              return not path.is_absolute() and ".." not in path.parts
+
+          with zipfile.ZipFile(Path("handoff") / wheel_name) as archive:
+              names = archive.namelist()
+              if not names or not all(safe(name) for name in names):
+                  raise SystemExit("wheel contains an unsafe path")
+          with tarfile.open(Path("handoff") / sdist_name, "r:gz") as archive:
+              members = archive.getmembers()
+              if not members or not all(
+                  safe(member.name) and not member.issym() and not member.islnk()
+                  for member in members
+              ):
+                  raise SystemExit("source distribution contains an unsafe path or link")
+
+          dist = Path("dist")
+          dist.mkdir()
+          for name in (wheel_name, sdist_name):
+              (Path("handoff") / name).rename(dist / name)
+          (Path("handoff") / "release-manifest.json").rename(dist.parent / "release-manifest.json")
+          print("verified exact Python release bytes")
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verified-python-distributions
+          path: |
+            dist/
+            release-manifest.json
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    name: Publish to PyPI
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/platefold/
+    permissions:
+      id-token: write
+    env:
+      APPROVED_MANIFEST_SHA256: ${{ inputs.manifest_sha256 }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: verified-python-distributions
+      - name: Re-check the bytes against the approved manifest
+        run: |
+          set -euo pipefail
+          test "$(sha256sum release-manifest.json | cut -d' ' -f1)" = "${APPROVED_MANIFEST_SHA256}"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          manifest = json.loads(Path("release-manifest.json").read_text())
+          listed = {item["name"]: item for item in manifest["artifacts"]}
+          files = sorted(Path("dist").iterdir())
+          if len(files) != 2:
+              raise SystemExit("expected exactly one wheel and one source distribution")
+          for path in files:
+              item = listed.get(path.name)
+              if item is None or item["kind"] not in {"python-wheel", "python-sdist"}:
+                  raise SystemExit(f"{path.name} is not a listed Python distribution")
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              if digest != item["sha256"] or path.stat().st_size != item["size"]:
+                  raise SystemExit(f"{path.name} differs from the approved manifest")
+          print("approved bytes unchanged")
+          PY
+      - name: Publish through PyPI Trusted Publishing
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist
+          verify-metadata: "true"
+          skip-existing: "false"
+          attestations: "true"

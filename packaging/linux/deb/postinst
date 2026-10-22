@@ -1,0 +1,40 @@
+#!/bin/sh
+# Install and load the AppArmor profile that lets the bundled Chromium create
+# its user-namespace sandbox. It is copied rather than shipped as a conffile:
+# older AppArmor (Debian 12, Ubuntu 22.04) cannot parse its userns rule and
+# would report an error at every policy reload, and those systems do not
+# restrict user namespaces, so they do not need it.
+set -e
+
+profile=platefold-bundled-chromium
+source=/usr/share/platefold/apparmor/$profile
+target=/etc/apparmor.d/$profile
+
+install_profile() {
+    if ! command -v apparmor_parser >/dev/null 2>&1; then
+        rm -f "$target"
+        return 0
+    fi
+    if ! apparmor_parser --skip-kernel-load --skip-cache --quiet "$source" >/dev/null 2>&1; then
+        echo "platefold: this AppArmor version cannot read the sandbox profile; not installing it."
+        rm -f "$target"
+        return 0
+    fi
+    install -m 0644 "$source" "$target"
+    if command -v ischroot >/dev/null 2>&1 && ischroot; then
+        return 0
+    fi
+    if command -v aa-enabled >/dev/null 2>&1 && aa-enabled --quiet 2>/dev/null; then
+        if ! apparmor_parser --replace --skip-cache --quiet "$target"; then
+            echo "platefold: could not load $target now; AppArmor loads it at the next boot."
+        fi
+    fi
+}
+
+case "$1" in
+    configure)
+        install_profile
+        ;;
+esac
+
+exit 0

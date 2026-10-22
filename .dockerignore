@@ -1,0 +1,37 @@
+# Deny everything, then admit only the tracked files the Dockerfile reads.
+# Admit files, not directories: an exception such as "!desktop/" also admits
+# every ignored build directory beneath it (node_modules, dist,
+# src-tauri/target) and sends it to the builder. The one directory admitted
+# whole is the Python package, which the wheel build copies entire; its
+# ignored build output is excluded again straight after it.
+# tests/test_container_context.py holds these rules to that contract.
+*
+!Dockerfile
+!pyproject.toml
+!README.md
+!LICENSE
+!platefold/**
+platefold/**/__pycache__
+platefold/**/*.pyc
+platefold/web
+!desktop/THIRD_PARTY.md
+!desktop/package.json
+!desktop/package-lock.json
+!desktop/index.html
+!desktop/tsconfig.json
+!desktop/vite.config.ts
+!desktop/src/*.ts
+!desktop/src/*.css
+!packaging/container/requirements.txt
+!packaging/container/build.txt
+!packaging/container/browser-amd64.sha256
+!packaging/container/browser-arm64.sha256
+!packaging/container/check_browser.py
+!packaging/container/chromium_credits.py
+!packaging/container/healthcheck.py
+!packaging/container/sandbox_check.py
+!packaging/container/limits.json
+!packaging/container/NOTICE.md
+!packaging/container/LICENSE.seccomp
+!packaging/container/seccomp.json
+!packaging/licenses/cobble-BSD-2-Clause.txt

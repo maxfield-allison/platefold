@@ -1,0 +1,27 @@
+{
+  "name": "mono",
+  "label": "Mono — black and white",
+  "description": "Neutral black and grey for monochrome printing.",
+  "mode": "light",
+  "colors": {
+    "page": "#ffffff",
+    "accent": "#2b2b2b",
+    "accent_soft": "#9a9a9a",
+    "ink": "#1a1a1a",
+    "ink_strong": "#000000",
+    "title": "#000000",
+    "heading": "#2b2b2b",
+    "ink_soft": "#5c5c5c",
+    "rule": "#c9c9c9",
+    "surface": "#ececec",
+    "surface_alt": "#f6f6f6",
+    "link": "#1a1a1a",
+    "diagram_fill": "#f0f0f0",
+    "diagram_stroke": "#4a4a4a",
+    "diagram_text": "#111111",
+    "diagram_alt_fill": "#e2e2e2",
+    "diagram_note_fill": "#f6f6f6",
+    "diagram_note_stroke": "#9a9a9a"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

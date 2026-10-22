@@ -1,0 +1,27 @@
+{
+  "name": "bristol",
+  "label": "Bristol — amber",
+  "description": "Warm ivory paper, amber rules and deep brown ink.",
+  "mode": "light",
+  "colors": {
+    "page": "#fffbf3",
+    "accent": "#99500f",
+    "accent_soft": "#d8b276",
+    "ink": "#322b23",
+    "ink_strong": "#34220f",
+    "title": "#34220f",
+    "heading": "#74400e",
+    "ink_soft": "#74614a",
+    "rule": "#ded0b6",
+    "surface": "#f4e8d1",
+    "surface_alt": "#faf2e2",
+    "link": "#99500f",
+    "diagram_fill": "#f3dfb8",
+    "diagram_stroke": "#99500f",
+    "diagram_text": "#322b23",
+    "diagram_alt_fill": "#e4e9d6",
+    "diagram_note_fill": "#f4e8d1",
+    "diagram_note_stroke": "#d8b276"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

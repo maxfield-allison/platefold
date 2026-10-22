@@ -1,0 +1,147 @@
+# Example only. Install seccomp-kubernetes.json under each selected node's
+# kubelet seccomp directory as platefold/chromium.json before scheduling.
+# Do not use the Docker seccomp.json: its conditional fields are not OCI fields.
+# Provision Secret platefold-api with key api.json using your secret manager.
+# Replace the example image digest and browser-facing authority before applying.
+# Replace the NetworkPolicy's namespace label with your ingress controller's.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: platefold-jobs
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 4Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platefold
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: platefold}
+  template:
+    metadata:
+      labels: {app: platefold}
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        fsGroupChangePolicy: OnRootMismatch
+        appArmorProfile:
+          type: RuntimeDefault
+        seccompProfile:
+          type: Localhost
+          localhostProfile: platefold/chromium.json
+      # Projected secrets are root-owned. This normal-user init process copies
+      # only the named secret to a private 0600 file for the server's ownership
+      # check; values never appear in arguments, environment or logs. Restore
+      # the owned job root's private mode after kubelet volume permission work.
+      initContainers:
+        - name: credentials
+          image: platefold-qualified@sha256:REPLACE_WITH_QUALIFIED_DIGEST
+          command: [python, -c]
+          args:
+            - |
+              import os, pathlib
+              os.umask(0o077)
+              pathlib.Path('/data/jobs').mkdir(mode=0o700, exist_ok=True)
+              fd = os.open('/data/jobs', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+              if os.fstat(fd).st_uid != os.geteuid():
+                  raise ValueError('Job directory must belong to the application user')
+              os.fchmod(fd, 0o700)
+              os.close(fd)
+              pathlib.Path('/credentials/api.json').write_bytes(pathlib.Path('/projected/api.json').read_bytes())
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {cpu: 100m, memory: 64Mi}
+          volumeMounts:
+            - {name: jobs, mountPath: /data}
+            - {name: projected-api, mountPath: /projected, readOnly: true}
+            - {name: credentials, mountPath: /credentials}
+      containers:
+        - name: platefold
+          image: platefold-qualified@sha256:REPLACE_WITH_QUALIFIED_DIGEST
+          args: [serve, --limits-file, /opt/platefold/limits.json, --host, "0.0.0.0", --data-dir, /data/jobs, --tokens-file, /credentials/api.json, --origin, "https://platefold.example.org"]
+          env:
+            - {name: PLATEFOLD_HEALTH_HOST, value: platefold.example.org}
+          ports:
+            - {name: http, containerPort: 8787}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {cpu: "2", memory: 3Gi, ephemeral-storage: 1Gi}
+          startupProbe:
+            exec: {command: [python, /opt/platefold/healthcheck.py]}
+            periodSeconds: 2
+            failureThreshold: 30
+          readinessProbe:
+            exec: {command: [python, /opt/platefold/healthcheck.py]}
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+              httpHeaders: [{name: Host, value: platefold.example.org}]
+          volumeMounts:
+            - {name: jobs, mountPath: /data}
+            - {name: scratch, mountPath: /tmp}
+            - {name: shm, mountPath: /dev/shm}
+            - {name: credentials, mountPath: /credentials, readOnly: true}
+      volumes:
+        - name: jobs
+          persistentVolumeClaim: {claimName: platefold-jobs}
+        - name: scratch
+          emptyDir: {medium: Memory, sizeLimit: 512Mi}
+        - name: shm
+          emptyDir: {medium: Memory, sizeLimit: 256Mi}
+        - name: credentials
+          emptyDir: {medium: Memory, sizeLimit: 1Mi}
+        - name: projected-api
+          secret:
+            secretName: platefold-api
+            defaultMode: 0440
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: platefold
+spec:
+  selector: {app: platefold}
+  ports:
+    - {name: http, port: 8787, targetPort: http}
+---
+# Only the ingress controller reaches the server, so slow or abusive clients
+# meet its timeouts and connection limits first. The server needs no egress:
+# renders are offline. Kubelet probes come from the node; most network plugins
+# allow them without a rule, but check yours.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: platefold
+spec:
+  podSelector:
+    matchLabels: {app: platefold}
+  policyTypes: [Ingress, Egress]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: REPLACE_WITH_INGRESS_NAMESPACE}
+      ports:
+        - {protocol: TCP, port: 8787}
+  egress: []

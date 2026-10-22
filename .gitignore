@@ -1,0 +1,58 @@
+# --- runtime artefacts ---
+.mermaid-cache/
+PDF Export/
+_export-report.json
+_smoke/
+_exe-smoke/
+_bench/
+_benchout/
+dist-bundled/
+build-bundled/
+
+# A user's own settings file; platefold.example.yml is the tracked template.
+/platefold.yml
+/platefold.yaml
+/platefold.json
+
+
+# --- dependencies ---
+node_modules/
+.venv/
+venv/
+
+# --- python ---
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+
+# PyInstaller writes throwaway specs next to the project; ours is tracked.
+*.spec
+!packaging/*.spec
+.pytest_cache/
+.ruff_cache/
+
+# --- documentation site (tools/prepare_docs.py stages into build/) ---
+/site/
+/.cache/
+
+platefold.yml
+platefold.yaml
+platefold.json
+.wheel-venv/
+dist-standalone/
+build-standalone/
+desktop/node_modules/
+desktop/dist/
+desktop/src-tauri/target/
+desktop/src-tauri/runtime/
+desktop/src-tauri/gen/
+desktop/src-tauri/icons/android/
+desktop/src-tauri/icons/ios/
+
+platefold/web/
+
+# Container release evidence and registry logins written by CI jobs.
+container-release/
+.docker-auth/

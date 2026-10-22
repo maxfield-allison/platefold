@@ -1,0 +1,27 @@
+{
+  "name": "graphite",
+  "label": "Graphite — violet",
+  "description": "Deep plum paper with lavender headings and violet diagrams.",
+  "mode": "dark",
+  "colors": {
+    "page": "#211a2c",
+    "accent": "#c4a0ff",
+    "accent_soft": "#735994",
+    "ink": "#eee5fa",
+    "ink_strong": "#fcf5ff",
+    "title": "#fcf5ff",
+    "heading": "#dbc2ff",
+    "ink_soft": "#bcb0ca",
+    "rule": "#554462",
+    "surface": "#34283f",
+    "surface_alt": "#2a2034",
+    "link": "#c4a0ff",
+    "diagram_fill": "#423052",
+    "diagram_stroke": "#c4a0ff",
+    "diagram_text": "#eee5fa",
+    "diagram_alt_fill": "#283b43",
+    "diagram_note_fill": "#34283f",
+    "diagram_note_stroke": "#735994"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

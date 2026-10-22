@@ -1,0 +1,18 @@
+# Installed by the platefold .deb package. Ubuntu 23.10 and later refuse
+# unprivileged user namespaces unless an AppArmor profile grants them, and
+# Chromium needs one for its sandbox. This profile grants that to exactly the
+# Chromium bundled in the package, which only root can replace. Like Ubuntu's
+# own profiles for Chrome and Edge, it adds no filesystem confinement;
+# Chromium still applies its own namespace and seccomp sandbox.
+#
+# The package copies this file to /etc/apparmor.d only when the installed
+# AppArmor understands it, and removes it with the package. Put local
+# additions in /etc/apparmor.d/local/platefold-bundled-chromium.
+abi <abi/4.0>,
+include <tunables/global>
+
+profile platefold-bundled-chromium /usr/lib/PlateFold/runtime/_internal/platefold/browser/chrome-headless-shell flags=(unconfined) {
+  userns,
+
+  include if exists <local/platefold-bundled-chromium>
+}

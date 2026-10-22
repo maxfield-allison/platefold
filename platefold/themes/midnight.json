@@ -1,0 +1,27 @@
+{
+  "name": "midnight",
+  "label": "Midnight — cyan",
+  "description": "Navy paper, cool cyan accents and pale blue text.",
+  "mode": "dark",
+  "colors": {
+    "page": "#0d1b2a",
+    "accent": "#62d4e7",
+    "accent_soft": "#326779",
+    "ink": "#dfedf7",
+    "ink_strong": "#f2faff",
+    "title": "#f2faff",
+    "heading": "#9de4f2",
+    "ink_soft": "#9eb9cc",
+    "rule": "#344f65",
+    "surface": "#152b40",
+    "surface_alt": "#112335",
+    "link": "#62d4e7",
+    "diagram_fill": "#173c50",
+    "diagram_stroke": "#62d4e7",
+    "diagram_text": "#dfedf7",
+    "diagram_alt_fill": "#2d304b",
+    "diagram_note_fill": "#152b40",
+    "diagram_note_stroke": "#326779"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

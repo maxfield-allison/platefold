@@ -1,0 +1,14 @@
+title = "PlateFold secret scanning"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Exact upstream api-iife.js checksum, verified against vendored Tauri 2.11.0 bytes"
+condition = "AND"
+paths = ['''^desktop/src-tauri/vendor/tauri-plugin-updater/UPSTREAM\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"api-iife\.js": "ee4315489b17e03f42e409067a77413703e0870a8b00de77e3de1daafb069d96",?\s*$''']

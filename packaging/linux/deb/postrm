@@ -1,0 +1,24 @@
+#!/bin/sh
+# Unload and delete the AppArmor profile postinst installed. The profile is
+# not a conffile, so dpkg does not track it; remove it with the program it
+# names rather than leaving a grant for a path that no longer exists.
+set -e
+
+profile=platefold-bundled-chromium
+target=/etc/apparmor.d/$profile
+
+case "$1" in
+    remove|purge)
+        if [ -f "$target" ]; then
+            if command -v apparmor_parser >/dev/null 2>&1 \
+                && command -v aa-enabled >/dev/null 2>&1 \
+                && aa-enabled --quiet 2>/dev/null; then
+                apparmor_parser --remove "$target" >/dev/null 2>&1 || true
+            fi
+            rm -f "$target"
+        fi
+        rm -f /var/cache/apparmor/*/"$profile"
+        ;;
+esac
+
+exit 0

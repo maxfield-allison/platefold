@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "playwright": {
+    "version": "1.62.0",
+    "browsers": {
+      "chromium-headless-shell": {
+        "revision": "1234",
+        "browserVersion": "151.0.7922.34"
+      },
+      "ffmpeg": {
+        "revision": "1011"
+      },
+      "winldd": {
+        "revision": "1007"
+      }
+    }
+  },
+  "platforms": {
+    "linux-x86_64": {
+      "browser": [
+        {
+          "directory": "chromium_headless_shell-1234",
+          "path": "builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip",
+          "url": "https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip",
+          "sha256": "3cfc2bd00d1bafcf8a68dc74c9c92bb7150ddc8d26ade948a776316e1cec4f14",
+          "size": 120231126
+        },
+        {
+          "directory": "ffmpeg-1011",
+          "path": "builds/ffmpeg/1011/ffmpeg-linux.zip",
+          "url": "https://cdn.playwright.dev/builds/ffmpeg/1011/ffmpeg-linux.zip",
+          "sha256": "ebc74fc5b94830176a3c2914ae96bd8bc7f6a91f4f33890230f84a172ee61ccc",
+          "size": 2376500
+        }
+      ],
+      "executable": "chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell",
+      "appimage_tools": [
+        {
+          "file": "AppRun-x86_64",
+          "url": "https://github.com/tauri-apps/binary-releases/releases/download/apprun-old/AppRun-x86_64",
+          "sha256": "f30140a43a0a59e46db21bdefdf749b9e9f2c6946e92afabbacf98b8ae73fb4f",
+          "size": 31552
+        },
+        {
+          "file": "linuxdeploy-x86_64.AppImage",
+          "url": "https://github.com/tauri-apps/binary-releases/releases/download/linuxdeploy/linuxdeploy-x86_64.AppImage",
+          "sha256": "e762bea85c8eb0d4b3508d46e5c1f037f717d0f9303ae3b4aafc8b04991fa1ef",
+          "size": 13264064
+        },
+        {
+          "file": "linuxdeploy-plugin-gtk.sh",
+          "url": "https://raw.githubusercontent.com/tauri-apps/linuxdeploy-plugin-gtk/dda522bce37387f1b853d9095713bfaa924c8423/linuxdeploy-plugin-gtk.sh",
+          "sha256": "7804c9eef13e59bf2783aad9882ef9db8f3f3f9e8d631874b1d348d550a3693f",
+          "size": 14622
+        },
+        {
+          "file": "linuxdeploy-plugin-gstreamer.sh",
+          "url": "https://raw.githubusercontent.com/tauri-apps/linuxdeploy-plugin-gstreamer/2a2e67491c32995a3f279ad0ecbe77abd512b42a/linuxdeploy-plugin-gstreamer.sh",
+          "sha256": "c107b49d84edbffc6ab226ed1007e0626a4f7aa2c3a36b7782bef62351d49e94",
+          "size": 4857
+        },
+        {
+          "file": "linuxdeploy-plugin-appimage.AppImage",
+          "url": "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage",
+          "sha256": "49d6a17160675a6bd1781699aae6bdf7692d98552e02a3671d2183d10547842e",
+          "size": 16488952
+        },
+        {
+          "file": "runtime-x86_64",
+          "url": "https://github.com/AppImage/type2-runtime/releases/download/continuous/runtime-x86_64",
+          "sha256": "617aa77314d57c8b8e4fae9c3f0b35af7b30d5529cb69e98f64f92510ed98a46",
+          "size": 944632
+        }
+      ]
+    },
+    "windows-x86_64": {
+      "browser": [
+        {
+          "directory": "chromium_headless_shell-1234",
+          "path": "builds/cft/151.0.7922.34/win64/chrome-headless-shell-win64.zip",
+          "url": "https://cdn.playwright.dev/builds/cft/151.0.7922.34/win64/chrome-headless-shell-win64.zip",
+          "sha256": "46cc69ef55ba29268ffe32dda4192a9d2165be42c3f4e923241153d519493aea",
+          "size": 120106945
+        },
+        {
+          "directory": "ffmpeg-1011",
+          "path": "builds/ffmpeg/1011/ffmpeg-win64.zip",
+          "url": "https://cdn.playwright.dev/builds/ffmpeg/1011/ffmpeg-win64.zip",
+          "sha256": "8d08827c019ad36e7b9d49d3648447d884534cb2acf200e71c715f6dd834cc50",
+          "size": 1411741
+        },
+        {
+          "directory": "winldd-1007",
+          "path": "builds/winldd/1007/winldd-win64.zip",
+          "url": "https://cdn.playwright.dev/builds/winldd/1007/winldd-win64.zip",
+          "sha256": "0069f0d11d4ad6df068a068c003d22fe7dbec192a47bba64b2e115e9c8ce41d8",
+          "size": 128684
+        }
+      ],
+      "executable": "chromium_headless_shell-1234/chrome-headless-shell-win64/chrome-headless-shell.exe"
+    },
+    "macos-arm64": {
+      "browser": [
+        {
+          "directory": "chromium_headless_shell-1234",
+          "path": "builds/cft/151.0.7922.34/mac-arm64/chrome-headless-shell-mac-arm64.zip",
+          "url": "https://cdn.playwright.dev/builds/cft/151.0.7922.34/mac-arm64/chrome-headless-shell-mac-arm64.zip",
+          "sha256": "cb46a336dbe3d6f1339c5039c3083e4e5dd8e4379710790e34f8f4a865e2452d",
+          "size": 99275008
+        },
+        {
+          "directory": "ffmpeg-1011",
+          "path": "builds/ffmpeg/1011/ffmpeg-mac-arm64.zip",
+          "url": "https://cdn.playwright.dev/builds/ffmpeg/1011/ffmpeg-mac-arm64.zip",
+          "sha256": "7d77eb0d44b59acc4065faa2476c0df1a242cc904c346f820626818c953c5277",
+          "size": 1097141
+        }
+      ],
+      "executable": "chromium_headless_shell-1234/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+    }
+  }
+}

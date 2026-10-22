@@ -1,0 +1,153 @@
+include README.md THEMING.md CONTRIBUTING.md CHANGELOG.md SECURITY.md CODE_OF_CONDUCT.md LICENSE
+include platefold.example.yml package.json package-lock.json justfile towncrier.toml
+include changes/.gitkeep
+include requirements-runtime.txt requirements-build.txt uv.lock setup.bat
+include packaging/rust-toolchain-downloads.json
+# Tools and tests are listed by name, not by pattern: a new file stays out of
+# the source distribution until it is added here. setuptools adds every
+# tests/test*.py on its own, so that default is removed first.
+exclude tests/test*.py
+include tests/conftest.py
+include tests/test_accessibility.py
+include tests/test_advanced_layout.py
+include tests/test_brand_assets.py
+include tests/test_browser_qualification.py
+include tests/test_browser_sandbox.py
+include tests/test_build_paths.py
+include tests/test_cdp.py
+include tests/test_config.py
+include tests/test_container_artifacts.py
+include tests/test_container_context.py
+include tests/test_container_release.py
+include tests/test_container_sandbox.py
+include tests/test_container_ui_check.py
+include tests/test_converter_accessibility.py
+include tests/test_converter_discovery.py
+include tests/test_converter_ingest.py
+include tests/test_cosign_release.py
+include tests/test_cross_platform_layout.py
+include tests/test_csv_ingest.py
+include tests/test_desktop_ui.py
+include tests/test_distribution.py
+include tests/test_docs_reference.py
+include tests/test_docs_release_claims.py
+include tests/test_docs_site_check.py
+include tests/test_document.py
+include tests/test_docx_ingest.py
+include tests/test_download_paths.py
+include tests/test_download_retry.py
+include tests/test_export_integration.py
+include tests/test_font_fallback.py
+include tests/test_font_resolution.py
+include tests/test_gui.py
+include tests/test_gui_keyboard.py
+include tests/test_heading_ids.py
+include tests/test_html_resources.py
+include tests/test_i18n.py
+include tests/test_image_delivery.py
+include tests/test_image_frame.py
+include tests/test_images.py
+include tests/test_ingest_cancellation.py
+include tests/test_inline_lookups.py
+include tests/test_inline_scan.py
+include tests/test_installed_fonts.py
+include tests/test_large_tables.py
+include tests/test_layout.py
+include tests/test_linux_deb.py
+include tests/test_linux_packaging.py
+include tests/test_macos_minimum.py
+include tests/test_macos_release.py
+include tests/test_markdown_limits.py
+include tests/test_markdown_prose.py
+include tests/test_native_downloads.py
+include tests/test_native_requirements.py
+include tests/test_rust_toolchain.py
+include tests/test_ooxml_limits.py
+include tests/test_paper.py
+include tests/test_pdf_finish.py
+include tests/test_pdf_syntax.py
+include tests/test_pdf_ua_fixtures.py
+include tests/test_pdfjoin.py
+include tests/test_placeholder_text.py
+include tests/test_prepare_docs.py
+include tests/test_preview.py
+include tests/test_public_workflows.py
+include tests/test_release_assembly.py
+include tests/test_render_security.py
+include tests/test_runtime_trim.py
+include tests/test_sandbox_observer.py
+include tests/test_server.py
+include tests/test_server_hardening.py
+include tests/test_server_processes.py
+include tests/test_server_sources.py
+include tests/test_server_web.py
+include tests/test_service.py
+include tests/test_settings_formats.py
+include tests/test_table_parts.py
+include tests/test_table_spans.py
+include tests/test_theme.py
+include tests/test_theme_contrast.py
+include tests/test_tile_assembly.py
+include tests/test_ui_accessibility.py
+include tests/test_update_feed_build.py
+include tests/test_windows_packaging.py
+include tests/test_worker.py
+include tests/test_xlsx_accessibility.py
+include tests/test_xlsx_ingest.py
+include tests/test_xlsx_number_formats.py
+# The interface accessibility tests load this probe at run time.
+include tests/ui_probe.js
+recursive-include tests/fixtures *.md
+include tools/assemble_release.py
+include tools/build_brand_assets.py
+include tools/build_bundle.py
+include tools/build_deb.py
+include tools/build_desktop.py
+include tools/build_docs_sample.py
+include tools/build_update_feed.py
+include tools/build_windows_candidate.ps1
+include tools/bundle_web.py
+include tools/check_blank_pages.py
+include tools/check_docs_site.py
+include tools/check_i18n.py
+include tools/check_linux_deb.py
+include tools/check_macos_minimum.py
+include tools/check_windows_fonts.py
+include tools/check_windows_package.py
+include tools/container_artifacts.py
+include tools/container_release.py
+include tools/container_seccomp.py
+include tools/container_ui_check.py
+include tools/cosign_release.py
+include tools/docs_reference.py
+include tools/download_retry.py
+include tools/macos_release.py
+include tools/make_corpus.py
+include tools/markdown_prose.py
+include tools/native_downloads.py
+include tools/native_requirements.py
+include tools/prepare_docs.py
+include tools/rust_toolchain.py
+include tools/sign_macos_updater.py
+include tools/smoke_linux_desktop.py
+include tools/smoke_server_wheel.py
+include tools/smoke_windows_desktop.py
+include tools/test_container.py
+include tools/vendor_mermaid.py
+include tools/verify_macos_release.py
+recursive-include tools/a11y *.py
+recursive-include platefold/locales *.json
+recursive-include packaging *.json *.py *.spec *.txt *.nsh *.plist
+# The trust roots tools/assemble_release.py and tools/cosign_release.py verify against.
+include packaging/release-evidence.pub packaging/cosign.pub
+# The Linux packages' install guide, AppArmor profiles and .deb metadata.
+recursive-include packaging/linux *
+recursive-include docs *.md
+include desktop/package.json desktop/package-lock.json desktop/tsconfig.json desktop/index.html desktop/app.svg desktop/THIRD_PARTY.md
+include desktop/vite.config.ts
+recursive-include desktop/src *.ts *.css
+include desktop/src-tauri/Cargo.toml desktop/src-tauri/Cargo.lock desktop/src-tauri/build.rs desktop/src-tauri/tauri.conf.json
+recursive-include desktop/src-tauri/src *.rs
+recursive-include desktop/src-tauri/examples *.rs
+recursive-include desktop/src-tauri/capabilities *.json
+include desktop/src-tauri/icons/*.png desktop/src-tauri/icons/icon.ico desktop/src-tauri/icons/icon.icns

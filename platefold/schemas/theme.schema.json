@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plate|Fold theme",
+  "type": "object",
+  "required": [
+    "name"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "description": "Name used with --theme."
+    },
+    "label": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display label."
+    },
+    "description": {
+      "type": "string",
+      "description": "Why this palette exists and how it should be used."
+    },
+    "mode": {
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "description": "Dark themes are intended for screen reading."
+    },
+    "base": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$",
+      "description": "Inherit a theme and replace only supplied tokens."
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "the paper itself \u2014 body background"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "h1 rule, document header rule, code block spine"
+        },
+        "accent_soft": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "secondary borders drawn from the accent hue"
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "body text"
+        },
+        "ink_strong": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "bold text, table headers"
+        },
+        "title": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "document title and h1"
+        },
+        "heading": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "h2/h3/h4"
+        },
+        "ink_soft": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "captions, metadata labels, running header/footer"
+        },
+        "rule": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "hairlines and table cell borders"
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "table header fill, inline code chip"
+        },
+        "surface_alt": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "zebra striping, code block background"
+        },
+        "link": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Link"
+        },
+        "diagram_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram fill"
+        },
+        "diagram_stroke": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram stroke"
+        },
+        "diagram_text": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram text"
+        },
+        "diagram_alt_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram alt fill"
+        },
+        "diagram_note_fill": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram note fill"
+        },
+        "diagram_note_stroke": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "description": "Diagram note stroke"
+        }
+      }
+    },
+    "fonts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "body",
+        "head",
+        "mono"
+      ],
+      "properties": {
+        "body": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\w ,.'\"\\-]+$",
+          "description": "CSS font-family stack; no URLs, rules, or markup."
+        },
+        "head": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\w ,.'\"\\-]+$",
+          "description": "CSS font-family stack; no URLs, rules, or markup."
+        },
+        "mono": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[\\w ,.'\"\\-]+$",
+          "description": "CSS font-family stack; no URLs, rules, or markup."
+        }
+      }
+    }
+  }
+}

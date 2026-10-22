@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=PlateFold
+Comment=Documents to PDF with every figure on a page that fits
+Exec=platefold-desktop
+Icon=platefold-desktop
+Terminal=false
+Categories=Office;
+Keywords=PDF;Markdown;DOCX;XLSX;CSV;diagram;print;
+StartupWMClass=platefold-desktop

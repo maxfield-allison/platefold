@@ -1,0 +1,27 @@
+{
+  "name": "default",
+  "label": "Default — blue",
+  "description": "White paper, navy headings and restrained blue tables.",
+  "mode": "light",
+  "colors": {
+    "page": "#ffffff",
+    "accent": "#2f5d8c",
+    "accent_soft": "#9bb6d1",
+    "ink": "#17202b",
+    "ink_strong": "#0f2942",
+    "title": "#0f2942",
+    "heading": "#1c4a75",
+    "ink_soft": "#55697d",
+    "rule": "#d7dfe8",
+    "surface": "#eef3f8",
+    "surface_alt": "#f7f9fc",
+    "link": "#1b5e9c",
+    "diagram_fill": "#eef4fb",
+    "diagram_stroke": "#4a6fa5",
+    "diagram_text": "#12263f",
+    "diagram_alt_fill": "#f4f0e6",
+    "diagram_note_fill": "#fdf6dd",
+    "diagram_note_stroke": "#c9b458"
+  },
+  "$schema": "../schemas/theme.schema.json"
+}

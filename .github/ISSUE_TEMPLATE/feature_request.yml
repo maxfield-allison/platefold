@@ -1,0 +1,57 @@
+name: Feature Request
+description: Suggest an improvement to Plate|Fold's export or desktop workflow.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the document or workflow problem first. That context helps us
+        judge whether a new option, a smarter default, or clearer feedback is
+        the best answer.
+
+        Use synthetic or sanitized examples. If the request concerns a
+        suspected vulnerability, follow the Security Policy and report it
+        privately.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before filing
+      options:
+        - label: I searched existing issues for a similar request.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Explain the document, export, or desktop workflow that is difficult today.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What outcome would help?
+      description: Describe the result you need without assuming a particular implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: If you have an implementation or interface in mind, describe it here.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Include workarounds you use today and why they are insufficient.
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or references
+      description: Use synthetic or sanitized documents and remove private paths and metadata.

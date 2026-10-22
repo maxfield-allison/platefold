@@ -1,0 +1,9 @@
+# Ubuntu 24.04+: permit Chromium's user-namespace sandbox for this installed app.
+# Keep the attachment and all parent directories root-owned and non-writable by
+# ordinary users. Do not replace it with a wildcard over Downloads or /tmp.
+abi <abi/4.0>,
+include <tunables/global>
+
+profile platefold /opt/platefold/PlateFold.AppImage flags=(unconfined) {
+  userns,
+}

@@ -1,0 +1,56 @@
+[package]
+name = "platefold-desktop"
+version = "1.0.0"
+edition = "2021"
+license = "MIT"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-updater = { version = "=2.11.0", path = "vendor/tauri-plugin-updater", default-features = false, features = ["rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+open = "5"
+dunce = "1.0.5"
+reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "rustls"] }
+semver = "1"
+minisign-verify = "0.2.5"
+tempfile = "3"
+base64 = "0.22"
+futures-util = "0.3"
+sha2 = "0.10"
+
+[dev-dependencies]
+minisign = "0.9.1"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_Security"] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+# The release tools' own tests run with `cargo test`. Examples are otherwise only
+# compiled there, which let the verifier refuse the shipped policy unnoticed.
+[[example]]
+name = "bootstrap_release_keys"
+test = true
+
+[[example]]
+name = "sign_updater_artifact"
+test = true
+
+[[example]]
+name = "verify_updater_artifact"
+test = true
+
+[workspace]
+members = ["vendor/tauri-plugin-updater"]
+resolver = "2"
+
+[profile.release]
+# Leave the symbol table out of the shipped executable. Nothing at runtime
+# reads it; it only gives debuggers function names.
+strip = "symbols"
