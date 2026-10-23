@@ -18,6 +18,7 @@ import types
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -411,13 +412,53 @@ def exchange(port, *writes: bytes) -> bytes:
                 time.sleep(0.2)  # Let the server read the previous write on its own.
             connection.sendall(data)
         received = b""
-        while chunk := connection.recv(65536):
-            received += chunk
+        try:
+            while chunk := connection.recv(65536):
+                received += chunk
+        except ConnectionResetError:
+            # Rejecting an oversized head can close with unread request bytes.
+            # Accept a reset only after the complete expected rejection arrived.
+            if (
+                statuses(received)[-1:] != [431]
+                or b"\r\n\r\n" not in received
+                or not received.endswith(b"Request head exceeds 16 KiB")
+            ):
+                raise
     return received
 
 
 def statuses(received: bytes) -> list[int]:
     return [int(code) for code in re.findall(rb"^HTTP/1\.1 (\d{3}) ", received, re.MULTILINE)]
+
+
+@pytest.mark.parametrize(
+    "response,complete",
+    [
+        (
+            b"HTTP/1.1 431 Request Header Fields Too Large\r\nConnection: close\r\n\r\n"
+            b"Request head exceeds 16 KiB",
+            True,
+        ),
+        (b"", False),
+        (b"HTTP/1.1 431 Request Header Fields Too Large\r\n", False),
+        (b"HTTP/1.1 431 Request Header Fields Too Large\r\nRequest head exceeds 16 KiB", False),
+        (b"HTTP/1.1 431 Request Header Fields Too Large\r\n\r\nRequest head exceeds", False),
+        (b"HTTP/1.1 200 OK\r\n\r\nRequest head exceeds 16 KiB", False),
+    ],
+)
+def test_exchange_reset_requires_complete_head_rejection(monkeypatch, response, complete):
+    connection = MagicMock()
+    connection.__enter__.return_value = connection
+    connection.recv.side_effect = (
+        [response, ConnectionResetError()] if response else [ConnectionResetError()]
+    )
+    monkeypatch.setattr(sys.modules[__name__], "connect", lambda _port: connection)
+    if complete:
+        received = exchange(0, b"request")
+        assert received == response
+    else:
+        with pytest.raises(ConnectionResetError):
+            exchange(0, b"request")
 
 
 @pytest.mark.parametrize("fields", [1, 160], ids=["one-header", "many-headers"])
