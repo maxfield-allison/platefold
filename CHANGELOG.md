@@ -6,6 +6,12 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.2] - 2026-10-23
+
+### Security
+
+- Refresh the pinned Debian container snapshot to include patched Expat, PCRE2 and OpenSSL packages.
+
 ## [1.0.1] - 2026-10-22
 
 ### Security

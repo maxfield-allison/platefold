@@ -43,7 +43,7 @@ ARG TARGETARCH
 ARG CACHE_BUST=local
 # Frozen Debian repository metadata keeps OS inputs repeatable. Advance deliberately
 # with a fresh image scan; base image digest and Python/npm locks move separately.
-ARG DEBIAN_SNAPSHOT=20260913T000000Z
+ARG DEBIAN_SNAPSHOT=20261023T000000Z
 RUN case "$TARGETARCH" in amd64|arm64) ;; *) echo "unsupported architecture: $TARGETARCH" >&2; exit 1;; esac && \
     rm /etc/apt/sources.list.d/debian.sources && \
     printf 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/%s/ trixie main\ndeb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/%s/ trixie-security main\n' "$DEBIAN_SNAPSHOT" "$DEBIAN_SNAPSHOT" > /etc/apt/sources.list && \

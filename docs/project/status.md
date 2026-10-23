@@ -1,12 +1,12 @@
 # Release status
 
-**Plate|Fold 1.0.1 is undergoing release qualification.** The published 1.0.0 source tag remains available. Signed 1.0.1 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
+**Plate|Fold 1.0.2 is undergoing release qualification.** The published 1.0.0 and 1.0.1 source tags remain available. Signed 1.0.2 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
 
 ## Retained platform qualification
 
-The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.1 packages; a release manifest binds the exact source and delivered files.
+The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.2 packages; a release manifest binds the exact source and delivered files.
 
 | | Windows | Linux | macOS |
 | --- | --- | --- | --- |

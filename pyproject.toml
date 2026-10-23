@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "platefold"
-version = "1.0.1"
+version = "1.0.2"
 description = "Turn Markdown, DOCX, XLSX, CSV and TSV (and DOC, ODT or RTF through an installed converter) into print-quality PDFs, with each wide diagram or table on a page it fits"
 readme = "README.md"
 requires-python = ">=3.11"
