@@ -6,6 +6,13 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.3] - 2026-10-24
+
+### Security
+
+- Require pypdf 6.21.2 or newer and refresh native and container pins to fix malformed-PDF denial-of-service vulnerabilities (CVE-2026-115572, CVE-2026-115580 and CVE-2026-115585).
+- Refresh the pinned Debian snapshot and documentation tooling, and use Node.js 22.23.4 for builds, to include the Brotli decoder fix (CVE-2026-111497).
+
 ## [1.0.2] - 2026-10-23
 
 ### Security

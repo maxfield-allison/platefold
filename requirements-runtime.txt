@@ -11,7 +11,7 @@ jsonschema==4.26.0
 mammoth==1.12.1
 openpyxl==3.1.5
 pillow==13.0.0
-pypdf==6.19.0
+pypdf==6.21.2
 pypdfium2==5.13.0
 referencing==0.37.0
 rpds-py==2026.6.3

@@ -1,12 +1,12 @@
 # Release status
 
-**Plate|Fold 1.0.2 is undergoing release qualification.** The published 1.0.0 and 1.0.1 source tags remain available. Signed 1.0.2 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
+**Plate|Fold 1.0.3 is undergoing release qualification.** The published 1.0.0, 1.0.1 and 1.0.2 source tags remain available. Signed 1.0.3 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
 
 ## Retained platform qualification
 
-The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.2 packages; a release manifest binds the exact source and delivered files.
+The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.3 packages; a release manifest binds the exact source and delivered files.
 
 | | Windows | Linux | macOS |
 | --- | --- | --- | --- |
@@ -16,6 +16,8 @@ The table records checks of the preceding 1.0.0 candidate. It does not qualify c
 | In-app update path | Metadata-signature rejection and a valid older-to-newer download, separate install consent, native installer handoff and standard-user relaunch. Bad-artifact, interruption and failed-replacement cases remain untested for this final Windows candidate | Native older-to-newer rehearsal from a user-owned AppImage, including tamper, interruption and failed-replacement cases. The administrator-managed `/opt` installation and the `.deb` update by hand | Signed artifact check and packaged update artifact |
 
 "Run in CI" means browser integration tests export real PDFs as an unprivileged user, with Chromium's sandbox on. Windows has the broadest hands-on coverage. The macOS package has signed-runtime evidence on Apple Silicon, but nobody has walked through its interface by hand, and closing the app during an export has not been observed on a real Mac. Linux also has standard-user desktop and updater evidence; neither Linux nor earlier Windows tests substitute for a new Windows package check.
+
+The later 1.0.2 offline Windows candidate also passed standard-user installation, PDF export, a saved-theme load after an operating-system restart, and uninstall with user data retained. SmartScreen still showed an unrecognized-app reputation warning despite a valid publisher signature. These checks do not qualify the changed 1.0.3 packages or complete its remaining updater and Linux tests.
 
 ## Scope and limits
 

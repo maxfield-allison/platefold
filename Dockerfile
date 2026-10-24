@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
 ARG PYTHON_IMAGE=python:3.13-slim@sha256:7ce4b6dfe35e55397b7cda544f8a13f191b7ae28dc5aad71fe664dbc9bc2623f
-ARG NODE_IMAGE=node:22.23.2-bookworm-slim@sha256:83f487e0a63425e5b4d146fb5e5be574bcbe1b7b843d3ebafdd95eaf7767a7e5
+ARG NODE_IMAGE=node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d
 FROM ${NODE_IMAGE} AS web
 WORKDIR /build/desktop
 COPY desktop/package.json desktop/package-lock.json ./
@@ -43,7 +43,7 @@ ARG TARGETARCH
 ARG CACHE_BUST=local
 # Frozen Debian repository metadata keeps OS inputs repeatable. Advance deliberately
 # with a fresh image scan; base image digest and Python/npm locks move separately.
-ARG DEBIAN_SNAPSHOT=20261023T000000Z
+ARG DEBIAN_SNAPSHOT=20261024T120000Z
 RUN case "$TARGETARCH" in amd64|arm64) ;; *) echo "unsupported architecture: $TARGETARCH" >&2; exit 1;; esac && \
     rm /etc/apt/sources.list.d/debian.sources && \
     printf 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/%s/ trixie main\ndeb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/%s/ trixie-security main\n' "$DEBIAN_SNAPSHOT" "$DEBIAN_SNAPSHOT" > /etc/apt/sources.list && \

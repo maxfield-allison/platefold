@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "platefold"
-version = "1.0.2"
+version = "1.0.3"
 description = "Turn Markdown, DOCX, XLSX, CSV and TSV (and DOC, ODT or RTF through an installed converter) into print-quality PDFs, with each wide diagram or table on a page it fits"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -46,7 +46,7 @@ dependencies = [
     "websocket-client>=1.7",  # DevTools Protocol transport (see platefold/cdp.py)
     "markdown>=3.11",         # markdown -> HTML; 3.11 scans code spans in linear time
     "Pygments>=2.18",         # syntax highlighting for fenced code blocks
-    "pypdf>=5.0",             # page counts, outline bookmarks, destinations
+    "pypdf>=6.21.2",          # page counts, outline bookmarks, destinations
     "Pillow>=13.0.0",         # image dimensions and downsampling; patched image codecs
     "pypdfium2>=5.13,<6",     # first-page images for the desktop preview
     "tinycss2>=1.5.1,<2",     # tokenize authored CSS before resource validation

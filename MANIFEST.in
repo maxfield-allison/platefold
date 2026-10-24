@@ -3,6 +3,7 @@ include platefold.example.yml package.json package-lock.json justfile towncrier.
 include changes/.gitkeep
 include requirements-runtime.txt requirements-build.txt uv.lock setup.bat
 include packaging/rust-toolchain-downloads.json
+include tools/prepare_node.sh
 # Tools and tests are listed by name, not by pattern: a new file stays out of
 # the source distribution until it is added here. setuptools adds every
 # tests/test*.py on its own, so that default is removed first.

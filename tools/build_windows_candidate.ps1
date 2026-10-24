@@ -23,7 +23,7 @@ try {
             throw "Missing build prerequisite: $command"
         }
     }
-    if ((& node.exe --version) -cne 'v22.23.2') { throw 'Node.js 22.23.2 is required.' }
+    if ((& node.exe --version) -cne 'v22.23.4') { throw 'Node.js 22.23.4 is required.' }
     Invoke-Checked 'py.exe' @('-3.11', '-c', 'import sys; assert sys.maxsize > 2**32')
     $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
     if (-not (Test-Path -LiteralPath $vswhere)) { throw 'Visual Studio Build Tools are required.' }

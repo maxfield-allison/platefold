@@ -19,7 +19,7 @@ Each release has three Windows downloads. Pick one:
 Download the release's `SHA256SUMS` as well, put it beside your download, and in PowerShell run, with your file's name:
 
 ```powershell
-Get-FileHash .\PlateFold_1.0.1_x64-online-setup.exe -Algorithm SHA256
+Get-FileHash .\PlateFold_1.0.3_x64-online-setup.exe -Algorithm SHA256
 ```
 
 Compare the `Hash` value with the line for that file in `SHA256SUMS`; case doesn't matter. [Verifying downloads](../project/verification.md) also shows how to check the signature on `SHA256SUMS` itself.
@@ -95,7 +95,7 @@ platefold --version
 platefold --list-themes
 ```
 
-The first command prints the version, for example `Plate|Fold 1.0.1`. The second lists the ten built-in themes and eight font sets.
+The first command prints the version, for example `Plate|Fold 1.0.3`. The second lists the ten built-in themes and eight font sets.
 
 ### Where Plate|Fold keeps things
 

@@ -103,7 +103,7 @@ platefold --version
 platefold --list-themes
 ```
 
-The first command prints the version, for example `Plate|Fold 1.0.1`. The second lists the ten built-in themes and eight font sets.
+The first command prints the version, for example `Plate|Fold 1.0.3`. The second lists the ten built-in themes and eight font sets.
 
 ### Where Plate|Fold keeps things
 
