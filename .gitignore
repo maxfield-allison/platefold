@@ -56,3 +56,9 @@ platefold/web/
 # Container release evidence and registry logins written by CI jobs.
 container-release/
 .docker-auth/
+
+# Product website build and browser evidence.
+/build/website/
+/website-tests/node_modules/
+/website-tests/test-results/
+/website-tests/playwright-report/

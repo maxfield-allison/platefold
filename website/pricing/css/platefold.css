@@ -1,0 +1,58 @@
+/* Plate|Fold: the Bristol theme's warm paper, amber rules and brown ink. */
+@font-face {
+  font-family: Sora;
+  src: url("../fonts/sora-variable.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #fffbf3;
+  --surface: #faf2e2;
+  --surface-strong: #fffbf3;
+  --ink: #322b23;
+  --ink-soft: #74614a;
+  --line: #ded0b6;
+  --accent: #99500f;
+  --on-accent: #fffbf3;
+  --link: #99500f;
+  --focus: #99500f;
+  --price: #34220f;
+  --font-body: Sora, system-ui, sans-serif;
+  --font-display: Sora, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --stage-bg: #2a1a0f;
+  --stage-shadow: 0 30px 70px -36px rgba(52, 34, 15, 0.55), 0 0 0 1px #ded0b6;
+  --control-bg: #faf2e2;
+  --control-border: #d8b276;
+  --ribbon-bg: #34220f;
+  --vignette: rgba(10, 4, 0, 0.55);
+  --ribbon-ink: #f4e8d1;
+}
+
+.hero h1 {
+  font-weight: 700;
+}
+
+.hero h1 .pipe {
+  color: #d8b276;
+}
+
+.plan {
+  background: #fffbf3;
+  border-color: #d8b276;
+  box-shadow: 0 1px 0 #ded0b6, 0 10px 30px -24px rgba(52, 34, 15, 0.5);
+}
+
+.plan .price {
+  color: #34220f;
+  font-weight: 400;
+}

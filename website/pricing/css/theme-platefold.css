@@ -1,0 +1,31 @@
+/* Paper and walnut finish; controls and reflow remain in common.css. */
+:root {
+  --stage-shadow: 0 28px 72px -34px rgba(69, 36, 12, 0.56), 0 0 0 1px #c4ac85;
+  --vignette: rgba(25, 10, 1, 0.28);
+}
+body {
+  background: radial-gradient(ellipse at 50% 0, #fffdf7, #f7eddb 82%);
+}
+.hero h1 {
+  color: #3d2b19;
+  font-weight: 650;
+  letter-spacing: -0.05em;
+}
+.stage__viewport {
+  border: 1px solid #b99e75;
+  border-radius: 10px;
+}
+.stage__grain { opacity: 0.08; }
+.control {
+  background: linear-gradient(180deg, #fffdf6, #f6ecd9);
+  border-color: #c3a97e;
+  color: #593817;
+  box-shadow: inset 0 1px 0 #fffdf7;
+}
+.plan {
+  background: linear-gradient(150deg, #fffdf7, #faf0dc);
+  border-color: #d2bb94;
+  box-shadow: inset 0 1px 0 #fffef9, 0 14px 30px -27px #805324;
+}
+.plan .price { color: #593817; }
+.site-footer { border-color: #d2bb94; }
