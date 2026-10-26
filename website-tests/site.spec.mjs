@@ -82,6 +82,7 @@ for (const width of [1280,390,320]) {
     await page.goto('/');
     await expect(page.getByRole('heading',{level:1})).toBeVisible();
     await expect(page.locator('header a[href="/pricing/"]')).toBeVisible();
+    await expect(page.getByRole('link',{name:'Support the projects',exact:true})).toHaveAttribute('href','/pricing/#support-title');
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     await expect(page.getByRole('link',{name:'Get started in the docs'})).toHaveAttribute('href',product==='platefold'?'https://maxfield-allison.github.io/platefold/get-started/':'https://maxfield-allison.github.io/dnsweaver/getting-started/');
     await page.screenshot({path:`test-results/home-${width}.png`,fullPage:true});
