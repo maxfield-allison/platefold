@@ -454,14 +454,6 @@ section[id] {
   color: var(--muted);
   margin: 0;
 }
-.number {
-  font:
-    11px Mono,
-    monospace;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 12px;
-}
 .feature-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
