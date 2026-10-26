@@ -1,7 +1,78 @@
-import {test, expect} from '@playwright/test';
-const product = 'platefold';
-const display = 'Plate|Fold';
-const domain = 'platefold.page';
+import { test, expect } from "@playwright/test";
+const product = "platefold";
+const display = "Plate|Fold";
+const domain = "platefold.page";
+test("sample page controls show real output pages and announce the selection", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const controls = page.getByRole("group", { name: "Choose a sample page" });
+  await controls.getByRole("button", { name: "Custom", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("#sample-caption")).toHaveText(
+    "Custom · A page cut to this diagram’s proportions.",
+  );
+  await expect(page.locator("#sample-image")).toHaveAttribute(
+    "alt",
+    "Custom ultra-wide page from the sample PDF containing the widest diagram",
+  );
+  await page.waitForFunction(() => {
+    const image = document.querySelector("#sample-image");
+    return image.complete && image.naturalWidth > image.naturalHeight * 5;
+  });
+  await expect(
+    controls.getByRole("button", { name: "Custom", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    controls.getByRole("button", { name: "Letter", exact: true }),
+  ).toHaveAttribute("aria-pressed", "false");
+});
+test("interface appearance can be changed with the keyboard", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const light = page.getByRole("button", { name: "Light", exact: true });
+  await light.focus();
+  await page.keyboard.press("Space");
+  await expect(light).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#interface-image")).toHaveAttribute(
+    "alt",
+    "PlateFold’s light interface with an example document and export settings",
+  );
+  await page.waitForFunction(
+    () =>
+      document.querySelector("#interface-image").complete &&
+      document.querySelector("#interface-image").naturalWidth === 2160,
+  );
+});
+test("without JavaScript the homepage keeps the sample, workspace, qualification notice and installation links", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 320, height: 900 },
+  });
+  try {
+    const page = await context.newPage();
+    await page.goto("http://127.0.0.1:38113/");
+    await expect(page.locator("#sample-image")).toBeVisible();
+    await expect(page.locator("[data-page-controls]")).toBeHidden();
+    await expect(page.locator("[data-interface-controls]")).toBeHidden();
+    await expect(page.locator(".notice")).toContainText(
+      "Desktop downloads are undergoing final release qualification.",
+    );
+    await expect(
+      page.getByRole("link", { name: "Get started in the docs" }),
+    ).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  } finally {
+    await context.close();
+  }
+});
 for (const width of [1280,390,320]) {
   test(`home, pricing, privacy and real links at ${width}px`, async ({page}) => {
     await page.setViewportSize({width,height:900});
