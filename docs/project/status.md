@@ -1,23 +1,23 @@
 # Release status
 
-**Plate|Fold 1.0.3 is undergoing release qualification.** The published 1.0.0, 1.0.1 and 1.0.2 source tags remain available. Signed 1.0.3 downloads are held until the new packages pass their platform checks. Nothing on this page is a support commitment.
+**Plate|Fold 1.0.3 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0, 1.0.1 and 1.0.2 source tags remain available. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
 
-## Retained platform qualification
+## Recorded 1.0.3 platform checks
 
-The table records checks of the preceding 1.0.0 candidate. It does not qualify changed 1.0.3 packages; a release manifest binds the exact source and delivered files.
+These checks used the final 1.0.3 packages. The release manifest binds their exact source and delivered files; older package tests are separate historical evidence.
 
 | | Windows | Linux | macOS |
 | --- | --- | --- | --- |
-| Export engine | Packaged export and source tests | Browser export in CI | Packaged signed-runtime smoke |
+| Export engine | Final packaged PDF export and source tests | Final Debian and administrator-managed AppImage PDF export; sandboxed container exports on amd64 and arm64 | Packaged signed-runtime smoke |
 | Desktop package | Signed online/offline installers and unpacked ZIP | AppImage and `.deb`, each with embedded CLI and browser | Signed and notarized Apple Silicon DMG |
-| Native acceptance | Recorded standard-user installation, launch, Markdown/table/Mermaid PDF export, valid updater handoff and uninstall | Standard-user Ubuntu desktop install, launch, preview, PDF export and uninstall, plus package smoke in minimal Debian and Ubuntu containers | Gatekeeper and packaged-runtime automation |
-| In-app update path | Metadata-signature rejection and a valid older-to-newer download, separate install consent, native installer handoff and standard-user relaunch. Bad-artifact, interruption and failed-replacement cases remain untested for this final Windows candidate | Native older-to-newer rehearsal from a user-owned AppImage, including tamper, interruption and failed-replacement cases. The administrator-managed `/opt` installation and the `.deb` update by hand | Signed artifact check and packaged update artifact |
+| Native acceptance | Standard-user installation, launch, PDF export, saved settings and removal | Debian GUI, three-page PDF export and removal with user data retained; administrator-managed AppImage GUI and export | Gatekeeper and packaged-runtime automation; native GUI walkthrough remains unqualified |
+| In-app update path | Authenticated older-to-newer installation and manual relaunch with settings retained; invalid metadata, wrong hash, corrupt stream and interrupted-download rejection/retry | Authenticated older-to-newer replacement of a user-owned AppImage, manual relaunch and retained preferences; invalid metadata, wrong hash, corrupt stream, interrupted-download retry and safe staging refusal before replacement. The administrator-managed `/opt` installation and the `.deb` update by hand | Signed updater artifact verified; native update handoff remains unqualified |
 
-"Run in CI" means browser integration tests export real PDFs as an unprivileged user, with Chromium's sandbox on. Windows has the broadest hands-on coverage. The macOS package has signed-runtime evidence on Apple Silicon, but nobody has walked through its interface by hand, and closing the app during an export has not been observed on a real Mac. Linux also has standard-user desktop and updater evidence; neither Linux nor earlier Windows tests substitute for a new Windows package check.
+"Run in CI" means browser integration tests export real PDFs as an unprivileged user, with Chromium's sandbox on. The Apple Silicon package is signed and notarized, but a native GUI/update walkthrough and closing during an export remain unqualified. Windows rollback after an installer has removed the previous version, portable Windows GUI use, missing-WebView bootstrap and automatic restart remain unqualified. Linux staging refusal was checked before replacement; failure after the final rename was not checked. Updating a user-owned AppImage does not qualify its bundled-browser rendering under Ubuntu's default sandbox policy.
 
-The later 1.0.2 offline Windows candidate also passed standard-user installation, PDF export, a saved-theme load after an operating-system restart, and uninstall with user data retained. SmartScreen still showed an unrecognized-app reputation warning despite a valid publisher signature. These checks do not qualify the changed 1.0.3 packages or complete its remaining updater and Linux tests.
+The earlier 1.0.2 offline Windows candidate separately passed standard-user installation, PDF export, a saved-theme load after an operating-system restart, and uninstall with user data retained. SmartScreen showed an unrecognized-app reputation warning despite a valid publisher signature. Those historical checks do not establish 1.0.3 SmartScreen reputation or acceptance after an operating-system restart.
 
 ## Scope and limits
 
@@ -40,9 +40,11 @@ Planned work for some of these is on [in development](in-development.md).
 
 ## Known limitations
 
+- **Ubuntu can block bundled-browser rendering from a user-owned AppImage.** Use the documented administrator-managed installation or Debian package; see [Linux installation](../get-started/linux.md). No sandbox bypass is needed for the qualified routes.
+- **Update guidance can stay stale after installation-folder permissions change.** If you change those permissions while the update dialog is open, turn manual update checks off and on to refresh it.
 - **Pagination isn't identical across machines.** [Fonts and browser versions](../guides/fonts.md) change line breaks.
 - **No strict font mode.** Characters a font set lacks print in another installed font, or as placeholder boxes when no installed font has them. Detected cases are warnings in the export report, the JSON result and the desktop app. An incomplete or unavailable check also warns; none of these warnings stops the export.
-- **Native accessibility acceptance is pending.** Tagged output and source semantics are implemented and structurally tested; screen-reader listening and final packaged-app qualification remain open. See [accessibility](../guides/accessibility.md).
+- **Native accessibility acceptance is pending.** Tagged output and source semantics are implemented and structurally tested; screen-reader listening and native accessibility acceptance for the final packages remain open. See [accessibility](../guides/accessibility.md).
 - **The legacy Tk window isn't available to screen readers.** Use the desktop app for the implemented accessibility semantics; its native acceptance remains pending.
 - **Plates aren't numbered separately** from inline figures.
 - **Dark themes print dark.** The page colour is part of the PDF.

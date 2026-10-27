@@ -45,7 +45,7 @@ test("interface appearance can be changed with the keyboard", async ({
       document.querySelector("#interface-image").naturalWidth === 2160,
   );
 });
-test("without JavaScript the homepage keeps the sample, workspace, qualification notice and installation links", async ({
+test("without JavaScript the homepage keeps the sample, workspace, release notice and installation links", async ({
   browser,
 }) => {
   const context = await browser.newContext({
@@ -59,7 +59,13 @@ test("without JavaScript the homepage keeps the sample, workspace, qualification
     await expect(page.locator("[data-page-controls]")).toBeHidden();
     await expect(page.locator("[data-interface-controls]")).toBeHidden();
     await expect(page.locator(".notice")).toContainText(
-      "Desktop downloads are undergoing final release qualification.",
+      "Plate|Fold 1.0.3 is available for Windows, Linux and Apple Silicon.",
+    );
+    await expect(
+      page.getByRole("link", { name: "Download 1.0.3", exact: true }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3",
     );
     await expect(
       page.getByRole("link", { name: "Get started in the docs" }),

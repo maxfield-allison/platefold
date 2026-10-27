@@ -2,7 +2,7 @@
 
 Plate|Fold turns DOC, DOCX, ODT, RTF, XLSX, Markdown, CSV and TSV into semantic, print-quality PDFs with vector Mermaid diagrams, embedded images and readable tables. DOC, ODT and RTF require a compatible LibreOffice or Pandoc already installed on the machine; Plate|Fold does not bundle either converter. A wide diagram or table gets a page large enough to read it: first a landscape plate, then a larger sheet, and finally a page cut to its proportions. Body text and narrow tables can stay on Letter or A4 pages in the same document.
 
-**Source version 1.0.3.** Desktop downloads are undergoing final release qualification. When available, they appear on the [releases page](https://github.com/maxfield-allison/platefold/releases). See the [release status](https://maxfield-allison.github.io/platefold/project/status/) for recorded platform checks and remaining qualification.
+**Version 1.0.3 is available.** Download the desktop packages or Python wheel from the [1.0.3 release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3). Signed Linux containers are available on Docker Hub and GHCR; see the [container guide](https://maxfield-allison.github.io/platefold/guides/container/). The [release status](https://maxfield-allison.github.io/platefold/project/status/) records the platform checks and remaining coverage limits.
 
 ## Run from source
 
