@@ -22,6 +22,7 @@ docs_dir: build/docs-site
 
 theme:
   name: material
+  custom_dir: docs-theme
   # Zensical's classic look matches the Material for MkDocs theme brand.css
   # was written against.
   variant: classic
@@ -70,6 +71,7 @@ extra_javascript:
   - assets/javascripts/mermaid.min.js
 
 extra:
+  product_analytics: {"website_id":"102ab584-7ce7-4c23-9b39-0ccbd10663c0","campaign_values":{"utm_source":["bluesky","facebook","linkedin","reddit","threads","viva","instagram","hackernews","github","probablyfine","newsletter"],"utm_medium":["social","referral","email"],"utm_campaign":["platefold-launch"],"utm_content":["launch","megathread","policy","sample","article","followup","story","readme"]}}
   generator: false
 
 markdown_extensions:
@@ -139,3 +141,4 @@ nav:
       - Security: project/security.md
       - Other tools: project/alternatives.md
       - Brand guide: project/brand.md
+  - Website privacy: privacy.md
