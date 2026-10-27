@@ -1,0 +1,40 @@
+{
+  "product": "platefold",
+  "website_id": "102ab584-7ce7-4c23-9b39-0ccbd10663c0",
+  "app_host": "platefold.page",
+  "docs_host": "maxfield-allison.github.io",
+  "docs_prefix": "/platefold/",
+  "campaign_values": {
+    "utm_source": [
+      "bluesky",
+      "facebook",
+      "linkedin",
+      "reddit",
+      "threads",
+      "viva",
+      "instagram",
+      "hackernews",
+      "github",
+      "probablyfine",
+      "newsletter"
+    ],
+    "utm_medium": [
+      "social",
+      "referral",
+      "email"
+    ],
+    "utm_campaign": [
+      "platefold-launch"
+    ],
+    "utm_content": [
+      "launch",
+      "megathread",
+      "policy",
+      "sample",
+      "article",
+      "followup",
+      "story",
+      "readme"
+    ]
+  }
+}
