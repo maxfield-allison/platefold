@@ -15,7 +15,7 @@
 // camera looks down at a steep angle, so depth is foreshortened by K.
 
 import { Rivet, DEFAULT_POSE } from "../rivet.js";
-import { TAU, clamp, lerp, ease, track, rng, rgba, smoothstep, paperTexture, noise1, springResponse } from "../ink.js";
+import { TAU, clamp, lerp, ease, track, rng, smoothstep, paperTexture, noise1, springResponse } from "../ink.js";
 import { breathAt, blinkSchedule, idleProgramme, applyDeltas, applyDoze, crestFollower } from "../behavior.js";
 import { loadArt, drawPlate, coverMatrix, rivetKit } from "../paint.js";
 
@@ -673,19 +673,6 @@ function paintCoupon(ctx, base, t, hold, stripSway, pass, mug = null) {
   ctx.fillStyle = "#322b23";
   for (const row of ROWS) ctx.fillText(row.digits, 0, row.sy - COUPON.sy0 + 4);
   ctx.restore();
-}
-
-function cylinder(ctx, u, v, radius, height, top, side) {
-  const p = toScreen(u, v);
-  const ry = radius * K;
-  ctx.fillStyle = side;
-  ctx.beginPath();
-  ctx.ellipse(p.x, p.y, radius, ry, 0, 0, Math.PI);
-  ctx.lineTo(p.x - radius, p.y - height);
-  ctx.ellipse(p.x, p.y - height, radius, ry, 0, Math.PI, 0, true);
-  ctx.closePath();
-  ctx.fill();
-  return { x: p.x, y: p.y - height, ry, top };
 }
 
 // The painted desk carries its own lamp light; this only adds the lamp's slow
