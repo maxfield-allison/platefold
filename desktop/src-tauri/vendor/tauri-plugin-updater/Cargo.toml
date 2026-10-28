@@ -186,4 +186,4 @@ optional = true
 default-features = false
 
 [dev-dependencies.minisign]
-version = "0.9.1"
+version = "0.10.0"
