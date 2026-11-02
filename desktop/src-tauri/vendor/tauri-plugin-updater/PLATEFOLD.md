@@ -14,6 +14,10 @@ Upstream's administrator-assisted macOS path is removed, with its `osakit` depen
 
 `src/updater.rs` and `src/error.rs` differ from the copied upstream files, `src/updater/replace.rs`, `src/updater/gate.rs`, `src/updater/cleanup.rs` and the replacement tests are added, and `Cargo.toml` adds test dependencies and drops the macOS `osakit` dependency. The added tests cover construction without a reachable metadata endpoint, signatures (including a rewritten trusted comment, which PlateFold uses to bind each artifact to its release), redirects, declared and streamed oversize bodies, and interrupted transfer. The replacement tests use real directories to check the AppImage rename, the emulated macOS exchange and failures at each filesystem step. They also check that a refused exchange leaves the installed bundle unchanged. They never install a package. They emulate the macOS exchange, because `renamex_np` exists only on macOS, and the macOS code itself is not compiled on Linux; `cargo clippy -p tauri-plugin-updater --target aarch64-apple-darwin --no-default-features --features native-tls` type-checks it after `rustup target add aarch64-apple-darwin`.
 
+`Cargo.toml` also raises the optional Windows `zip` dependency from 4 to 9.0.5 or later, for GHSA-m665-v7pm-7grj. PlateFold builds the updater without its `zip` feature, so the app does not contain the crate. `Cargo.lock` still records it because the updater is a workspace member, and dependency scanners read that file.
+
+It raises the Windows `windows-sys` dependency from 0.60 to 0.61.2, the version the app itself uses, and the Linux `dirs` dependency from 6 to 7. The updater calls only `dirs::cache_dir`, which returns the same folder on Linux in both versions.
+
 Run from `desktop/src-tauri`:
 
 ```console
