@@ -1,4 +1,8 @@
-"""Link destinations and emphasis: identical HTML, predictions that match, linear work."""
+"""Link destinations and emphasis: identical HTML, exact predictions, linear work.
+
+On Python-Markdown 3.11, check the regex emphasis predictions. On 3.11.1
+and later, check how work grows with the unchanged delimiter parser.
+"""
 
 from __future__ import annotations
 
@@ -185,13 +189,46 @@ def test_rejected_destinations_do_not_rescan_the_paragraph(tmp_path, unit):
     assert _lines_executed(tmp_path, unit * 600) / _lines_executed(tmp_path, unit * 300) < 2.3
 
 
-@pytest.mark.parametrize(
-    "unit", ["_a ", "__a ", "___a ", "*a ", "**a ", "***a ", "a_b ", "_a_ *b "]
+EMPHASIS_UNITS = ["_a ", "__a ", "___a ", "*a ", "**a ", "***a ", "a_b ", "_a_ *b "]
+
+needs_regex_emphasis = pytest.mark.skipif(
+    inline_lookups._REGEX_EMPHASIS is None,
+    reason="Python-Markdown 3.11.1 and later match emphasis without these expressions",
 )
+needs_delimiter_emphasis = pytest.mark.skipif(
+    inline_lookups._REGEX_EMPHASIS is not None,
+    reason="Python-Markdown 3.11 matches emphasis with expressions",
+)
+
+
+@needs_regex_emphasis
+def test_predictions_cover_the_regex_emphasis_expressions():
+    parser = markdown.Markdown()
+    used = {
+        item.pattern.pattern
+        for processor in parser.inlinePatterns
+        if isinstance(processor, inline_lookups._REGEX_EMPHASIS)
+        for item in processor.PATTERNS
+    }
+    assert used == set(inline_lookups.PREDICTIONS)
+
+
+@needs_regex_emphasis
+@pytest.mark.parametrize("unit", EMPHASIS_UNITS)
 def test_rejected_emphasis_does_not_rescan_the_paragraph(tmp_path, monkeypatch, unit):
     small = _characters_matched(tmp_path, monkeypatch, unit * 400)
     large = _characters_matched(tmp_path, monkeypatch, unit * 800)
     assert large <= 2.3 * max(small, 1)
+
+
+# Count executed Python lines to check how work grows on these inputs
+# with the delimiter parser introduced in 3.11.1.
+@needs_delimiter_emphasis
+@pytest.mark.parametrize("unit", [*EMPHASIS_UNITS, "*a** ", "*a* _b "])
+def test_delimiter_emphasis_work_grows_linearly(tmp_path, unit):
+    small = _lines_executed(tmp_path, unit * 400)
+    large = _lines_executed(tmp_path, unit * 800)
+    assert large / small < 2.3
 
 
 def test_tables_are_not_rebuilt_after_every_link(tmp_path, monkeypatch):
