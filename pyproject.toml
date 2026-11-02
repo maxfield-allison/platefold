@@ -78,7 +78,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/maxfield-allison/platefold"
+Homepage = "https://platefold.page/"
 Documentation = "https://maxfield-allison.github.io/platefold/"
 Source = "https://github.com/maxfield-allison/platefold"
 Issues = "https://github.com/maxfield-allison/platefold/issues"
