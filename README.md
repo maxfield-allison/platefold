@@ -2,7 +2,7 @@
 
 Plate|Fold turns DOC, DOCX, ODT, RTF, XLSX, Markdown, CSV and TSV into semantic, print-quality PDFs with vector Mermaid diagrams, embedded images and readable tables. DOC, ODT and RTF require a compatible LibreOffice or Pandoc already installed on the machine; Plate|Fold does not bundle either converter. A wide diagram or table gets a page large enough to read it: first a landscape plate, then a larger sheet, and finally a page cut to its proportions. Body text and narrow tables can stay on Letter or A4 pages in the same document.
 
-**Version 1.0.3 is available.** Download the desktop packages or Python wheel from the [1.0.3 release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3). Signed Linux containers are available on Docker Hub and GHCR; see the [container guide](https://maxfield-allison.github.io/platefold/guides/container/). The [release status](https://maxfield-allison.github.io/platefold/project/status/) records the platform checks and remaining coverage limits.
+**Version 1.0.3 is available.** Download the desktop packages or Python wheel from the [1.0.3 release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3). Signed Linux containers are available on Docker Hub and GHCR; see the [container guide](https://maxfield-allison.github.io/platefold/guides/container/). The [release status](https://maxfield-allison.github.io/platefold/project/status/) records the platform checks and remaining coverage limits. Python installs of 1.0.3 need one extra install command for now; see [Run from source](#run-from-source).
 
 ## Run from source
 
@@ -25,9 +25,12 @@ On Windows, activate it with `.venv\Scripts\Activate.ps1`. On macOS or Linux, us
 
 ```console
 python -m pip install -e .
+python -m pip install "markdown==3.11"
 platefold SAMPLE.md -o output
 platefold-gui
 ```
+
+**Python installs of 1.0.3 need Markdown 3.11.** Markdown 3.11.1 removed code that Plate|Fold 1.0.3 imports, and pip now installs 3.11.2, so every export stops with `cannot import name 'AsteriskProcessor'`. The `markdown==3.11` line above prevents that, and the same command fixes an existing source or wheel install. The desktop apps and the container already ship with Markdown 3.11. A fixed release is being prepared.
 
 `python -m platefold` also runs the CLI. Mermaid is included in the package. Normal exports don't need Node.js. `platefold-gui` opens the older Tk window, which is separate from the Tauri desktop app described above. Some Linux Python installations supply Tk as a separate system package.
 
