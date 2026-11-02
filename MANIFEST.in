@@ -132,6 +132,7 @@ include tools/rust_toolchain.py
 include tools/sign_macos_updater.py
 include tools/smoke_linux_desktop.py
 include tools/smoke_server_wheel.py
+include tools/smoke_wheel_export.py
 include tools/smoke_windows_desktop.py
 include tools/test_container.py
 include tools/vendor_mermaid.py
