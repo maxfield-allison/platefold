@@ -84,7 +84,12 @@ From the repository folder:
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -e .
+python -m pip install "markdown==3.11"
 ```
+
+!!! warning "Plate|Fold 1.0.3 needs Markdown 3.11"
+
+    Markdown 3.11.1 removed code that Plate|Fold 1.0.3 imports, and pip now installs 3.11.2. With either version installed, `platefold --version` still works, but every export stops with `cannot import name 'AsteriskProcessor'`. The `markdown==3.11` line above prevents that, and the same command fixes an existing install, including one from the release wheel. The desktop app and the container already ship with Markdown 3.11. A fixed release is being prepared.
 
 If PowerShell refuses to run the activation script, allow local scripts for your user once with `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then activate again.
 

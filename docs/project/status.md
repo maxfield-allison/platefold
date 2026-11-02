@@ -2,6 +2,10 @@
 
 **Plate|Fold 1.0.3 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0, 1.0.1 and 1.0.2 source tags remain available. Nothing on this page is a support commitment.
 
+!!! warning "Python packages need Markdown 3.11"
+
+    Installed from the wheel or from source, Plate|Fold 1.0.3 stops on every export with `cannot import name 'AsteriskProcessor'` when pip has installed Markdown 3.11.1 or 3.11.2. Install Plate|Fold, then run `python -m pip install "markdown==3.11"`. The desktop apps and the containers already ship with Markdown 3.11. A fixed release is being prepared.
+
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
 
 ## Recorded 1.0.3 platform checks
