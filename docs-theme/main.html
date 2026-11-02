@@ -2,6 +2,22 @@
 {% block extrahead %}
   {{ super() }}
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  {#- Link previews. The image is the 1200x630 card in docs/assets/brand. -#}
+  {%- if page.meta and page.meta.title %}
+    {%- set card_title = page.meta.title ~ " - " ~ config.site_name %}
+  {%- elif page.title and not page.is_homepage %}
+    {%- set card_title = page.title | striptags ~ " - " ~ config.site_name %}
+  {%- else %}
+    {%- set card_title = config.site_name %}
+  {%- endif %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ card_title | e }}">
+  <meta property="og:description" content="{{ (page.meta.description if page.meta and page.meta.description else config.site_description) | e }}">
+  {%- if page.canonical_url %}
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  {%- endif %}
+  <meta property="og:image" content="{{ config.site_url }}assets/brand/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
   {% if config.extra.product_analytics.website_id %}
   <script defer src="{{ 'assets/javascripts/analytics.js' | url }}"
     data-product="platefold"
