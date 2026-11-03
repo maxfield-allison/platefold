@@ -1,0 +1,54 @@
+name: Latest dependencies
+
+# The existing Python checks use pinned dependencies. This builds the wheel
+# and installs it without those pins to check exports with the newest
+# compatible dependencies. The weekly run checks for dependency changes
+# between pull requests and pushes.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "41 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: latest-dependencies-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  wheel:
+    name: Wheel export with latest dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: "0.12.10"
+      - name: Build the wheel
+        run: uv build --wheel --out-dir dist
+      # As in CI's browser job: lift the runner's AppArmor restriction so
+      # Chromium can create its sandbox under the image's seccomp profile.
+      - name: Let Chromium create its sandbox
+        run: |
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+      - name: Export documents from the installed wheel
+        run: >-
+          docker run --rm --init --shm-size=1g
+          --security-opt seccomp=packaging/container/seccomp.json
+          --env PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+          --volume "$PWD:/work:ro" --workdir /tmp
+          mcr.microsoft.com/playwright/python:v1.62.0-noble@sha256:51d31fdfacb0cff99a1a724152e34ae408d2bd4e7da310ff157450f49261cc59
+          bash -euo pipefail -c '
+          pip install --quiet --break-system-packages uv==0.12.10 &&
+          runuser -u pwuser --
+          python3 /work/tools/smoke_wheel_export.py /work/dist/platefold-*.whl'

@@ -152,6 +152,41 @@ def test_browser_tests_run_in_the_pinned_image_with_chromiums_sandbox():
     assert job["steps"].index(lift) < len(job["steps"]) - 1
 
 
+def test_the_built_wheel_exports_with_unlocked_dependencies_weekly():
+    pipeline = workflow("latest-dependencies.yml")
+    assert set(pipeline["on"]) == {"pull_request", "push", "workflow_dispatch", "schedule"}
+    steps = pipeline["jobs"]["wheel"]["steps"]
+    build = next(s for s in steps if s.get("name") == "Build the wheel")
+    assert build["run"] == "uv build --wheel --out-dir dist"
+    command = steps[-1]["run"]
+    # pip installs the wheel into its own environment; nothing reads uv.lock.
+    assert "smoke_wheel_export.py /work/dist/platefold-*.whl" in command
+    assert "uv sync" not in str(pipeline) and "--locked" not in str(pipeline)
+    # The same browser image and sandbox as CI's browser job.
+    browser = workflow("ci.yml")["jobs"]["browser"]["steps"][-1]["run"].split()
+    image = next(word for word in browser if word.startswith("mcr.microsoft.com/playwright/"))
+    assert image in command.split()
+    assert "seccomp=packaging/container/seccomp.json" in command
+    for weakening in ("--privileged", "unconfined", "--no-sandbox", "--cap-add"):
+        assert weakening not in command
+    assert (ROOT / "tools/smoke_wheel_export.py").is_file()
+
+
+def test_wheel_smoke_compares_the_ladder_tour_with_its_receipt():
+    sys.path.insert(0, str(ROOT / "tools"))
+    try:
+        import smoke_wheel_export as smoke
+    finally:
+        sys.path.remove(str(ROOT / "tools"))
+    receipt = json.loads(smoke.LADDER_RECEIPT.read_text(encoding="utf-8"))
+    pages = [(page["width_mm"], page["height_mm"]) for page in receipt["pages"]]
+    smoke.check_ladder_sizes(pages)
+    with pytest.raises(smoke.SmokeError, match="page 2"):
+        smoke.check_ladder_sizes([pages[0], (pages[1][1], pages[1][0]), *pages[2:]])
+    with pytest.raises(smoke.SmokeError, match="pages, receipt has"):
+        smoke.check_ladder_sizes(pages[:-1])
+
+
 def test_ci_jobs_fail_rather_than_skip_when_a_prerequisite_is_missing():
     jobs = workflow("ci.yml")["jobs"]
     assert jobs["browser"]["env"][STRICT] == "1"

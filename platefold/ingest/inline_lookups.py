@@ -7,9 +7,12 @@ time proportional to the square of the paragraph's length:
 - A link or image destination, `[text](`, is scanned one character at a time
   for its closing `)`. Without one the scan reaches the end of the paragraph,
   and 5,000 `[a](` took almost ten seconds.
-- An emphasis opener such as `_` or `**` is matched by a regular expression
-  that looks for a closer anywhere later in the paragraph. Without one it
-  fails only at the end, and 10,000 `_a ` took more than five seconds.
+- In Python-Markdown 3.11, an emphasis opener such as `_` or `**` is matched
+  by a regular expression that looks for a closer anywhere later in the
+  paragraph. Without one it fails only at the end, and 10,000 `_a ` took more
+  than five seconds. Python-Markdown 3.11.1 replaced those expressions with a
+  parser that pairs delimiter runs as it reads them, so the emphasis
+  predictions apply only where the 3.11 processors are present.
 
 Both are answered here by predicting, from tables, whether the stock method or
 expression would succeed. A candidate predicted to fail gets the stock "no
@@ -33,9 +36,14 @@ from typing import Any, cast
 
 import markdown
 from markdown import inlinepatterns
-from markdown.inlinepatterns import AsteriskProcessor, EmStrongItem, LinkInlineProcessor
+from markdown.inlinepatterns import EmStrongItem, LinkInlineProcessor
 
 from .inline_scan import SuffixCache
+
+# Python-Markdown 3.11's emphasis processor; `UnderscoreProcessor` subclasses
+# it. 3.11.1 removed both. Its `DelimiterProcessor` does not search the rest
+# of the paragraph for each rejected opener, so it is left unchanged.
+_REGEX_EMPHASIS: type | None = getattr(inlinepatterns, "AsteriskProcessor", None)
 
 _WORD = re.compile(r"\w")
 _LINK_CHARS = re.compile(r"[()'\"]")
@@ -275,18 +283,22 @@ def _smart_emphasis(text: str, pos: int, t: _EmphasisTables, shift: int) -> bool
 
 
 # Each prediction is paired with the expression it was derived from, and is
-# used only for a processor that still carries exactly that expression.
+# used only for a processor that still carries exactly that expression. These
+# are Python-Markdown 3.11's EM_STRONG_RE, STRONG_EM_RE, STRONG_EM3_RE,
+# STRONG_RE, EMPHASIS_RE, EM_STRONG2_RE, STRONG_EM2_RE, SMART_STRONG_EM_RE,
+# SMART_STRONG_RE and SMART_EMPHASIS_RE, written out because 3.11.1 removed
+# those constants with the processors that used them.
 PREDICTIONS: dict[str, tuple[str, Predict]] = {
-    inlinepatterns.EM_STRONG_RE: ("*", _em_strong),
-    inlinepatterns.STRONG_EM_RE: ("*", _strong_em),
-    inlinepatterns.STRONG_EM3_RE: ("*", _strong_em3),
-    inlinepatterns.STRONG_RE: ("*", _strong),
-    inlinepatterns.EMPHASIS_RE: ("*", _emphasis),
-    inlinepatterns.EM_STRONG2_RE: ("_", _em_strong),
-    inlinepatterns.STRONG_EM2_RE: ("_", _strong_em),
-    inlinepatterns.SMART_STRONG_EM_RE: ("_", _smart_strong_em),
-    inlinepatterns.SMART_STRONG_RE: ("_", _smart_strong),
-    inlinepatterns.SMART_EMPHASIS_RE: ("_", _smart_emphasis),
+    r"(\*)\1{2}(.+?)\1(.*?)\1{2}": ("*", _em_strong),
+    r"(\*)\1{2}(.+?)\1{2}(.*?)\1": ("*", _strong_em),
+    r"(\*)\1(?!\1)([^*]+?)\1(?!\1)(.+?)\1{3}": ("*", _strong_em3),
+    r"(\*{2})(.+?)\1": ("*", _strong),
+    r"(\*)([^\*]+)\1": ("*", _emphasis),
+    r"(_)\1{2}(.+?)\1(.*?)\1{2}": ("_", _em_strong),
+    r"(_)\1{2}(.+?)\1{2}(.*?)\1": ("_", _strong_em),
+    r"(?<!\w)(\_)\1(?!\1)(.+?)(?<!\w)\1(?!\1)(.+?)\1{3}(?!\w)": ("_", _smart_strong_em),
+    r"(?<!\w)(_{2})(?!_)(.+?)(?<!_)\1(?!\w)": ("_", _smart_strong),
+    r"(?<!\w)(_)(?!_)(.+?)(?<!_)\1(?!\w)": ("_", _smart_emphasis),
 }
 
 
@@ -329,9 +341,9 @@ def install(parser: markdown.Markdown) -> InlineLookups:
         target: Any = processor
         if getattr(type(processor), "getLink", None) is LinkInlineProcessor.getLink:
             target.getLink = _get_link(target.getLink, target.RE_LINK, lookups.links)
-        if isinstance(processor, AsteriskProcessor):
+        if _REGEX_EMPHASIS is not None and isinstance(processor, _REGEX_EMPHASIS):
             items = []
-            for item in processor.PATTERNS:
+            for item in target.PATTERNS:
                 known = PREDICTIONS.get(item.pattern.pattern)
                 if known is None:
                     items.append(item)

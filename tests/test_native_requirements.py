@@ -45,7 +45,8 @@ def test_the_browser_pin_and_the_native_download_manifest_agree():
 def test_editing_a_pin_fails_until_the_files_are_locked_again(tmp_path):
     pins, output = copy_pins(tmp_path)
     requirements.check(output, pins)
-    pins.write_text(pins.read_text().replace("PyInstaller==6.22.2", "PyInstaller==6.22.3"))
+    pinned = f"PyInstaller=={requirements.pins()['pyinstaller']}"
+    pins.write_text(pins.read_text().replace(pinned, "PyInstaller==0.0.1"))
     with pytest.raises(requirements.LockError, match="generated from other pins"):
         requirements.check(output, pins)
 
