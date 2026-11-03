@@ -1,1 +1,0 @@
-Update the desktop app's Tauri runtime to 2.11.6, which fixes GHSA-w28w-mhc8-qvjv. The flaw lets an attacker-controlled WebView retrieve large IPC responses queued for another WebView. PlateFold opens one window and loads only bundled local content.

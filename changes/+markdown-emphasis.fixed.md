@@ -1,1 +1,0 @@
-Fix exports when a wheel or source install uses Python-Markdown 3.11.1 or 3.11.2. These releases removed the emphasis processor Plate|Fold extended, causing exports to fail with `cannot import name 'AsteriskProcessor'`. The desktop apps and container pinned Python-Markdown 3.11 and were unaffected. Their dependency pins are now updated to 3.11.2.

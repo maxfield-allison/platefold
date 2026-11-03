@@ -6,6 +6,22 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.4] - 2026-11-03
+
+### Changed
+
+- Add privacy-filtered analytics to the product website and documentation, with campaign UTM labels, bounded link and search events, and a published privacy page.
+
+### Fixed
+
+- Fix exports when a wheel or source install uses Python-Markdown 3.11.1 or 3.11.2. These releases removed the emphasis processor Plate|Fold extended, causing exports to fail with `cannot import name 'AsteriskProcessor'`. The desktop apps and container pinned Python-Markdown 3.11 and were unaffected. Their dependency pins are now updated to 3.11.2.
+
+### Security
+
+- Require pypdf 6.21.4 or later and update the packaged dependency to fix malformed-PDF parsing vulnerabilities, including an infinite loop when an incomplete cross-reference table has no trailer.
+- Update the desktop app's Tauri runtime to 2.11.6, which fixes GHSA-w28w-mhc8-qvjv. The flaw lets an attacker-controlled WebView retrieve large IPC responses queued for another WebView. Plate|Fold opens one window and loads only bundled local content.
+
+
 ## [1.0.3] - 2026-10-24
 
 ### Security
