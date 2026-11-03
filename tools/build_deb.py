@@ -38,7 +38,7 @@ RESOURCE_DIR = Path("usr/lib/PlateFold")
 BROWSER = RESOURCE_DIR / "runtime/_internal/platefold/browser/chrome-headless-shell"
 PROFILE = "platefold-bundled-chromium"
 MAINTAINER = "Maxfield Allison <platefold@probablyfine.dev>"
-HOMEPAGE = "https://github.com/maxfield-allison/platefold"
+HOMEPAGE = "https://platefold.page/"
 # The frozen runtime is built on Debian 12 and needs its glibc (2.36). The
 # desktop program links these libraries directly; the t64 names are the
 # Debian 13 and Ubuntu 24.04 packages, which also provide the older names.
