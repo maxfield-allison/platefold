@@ -19,12 +19,12 @@ Check the download against the release's `SHA256SUMS` (see [Verifying downloads]
 
 ```console
 sha256sum --check --ignore-missing SHA256SUMS
-sudo apt install ./platefold_1.0.3_amd64.deb
+sudo apt install ./platefold_1.0.4_amd64.deb
 ```
 
 Open **PlateFold** from the application menu, or run `platefold-desktop`, then follow [your first export](first-export.md#in-the-desktop-app). The `platefold` command is the CLI, and the `.deb` puts it on your `PATH`. To update, install the next release's `.deb` the same way; the app's **Updates** dialog tells you when one exists but does not download it. `sudo apt remove platefold` removes the program and its AppArmor profile and keeps your themes and settings. `LINUX-INSTALL.md`, which comes with each Linux release, has the details, including an administrator-managed AppImage at `/opt/platefold`.
 
-CI installs the exact `.deb` in clean Ubuntu 24.04 and Debian 12 containers, runs its CLI, starts its desktop program, then removes and purges it and checks that nothing is left. A container cannot load AppArmor policy, and the CI host restricts user namespaces as Ubuntu does, so there the `.deb`'s own Chromium gives the coded sandbox refusal, and an Ubuntu 24.04 run exports through the fallback described next. The `.deb` has not yet been walked through on an Ubuntu desktop, where its profile is loaded.
+CI installs the exact `.deb` in clean Ubuntu 24.04 and Debian 12 containers, runs its CLI, starts its desktop program, then removes and purges it and checks that nothing is left. A container cannot load AppArmor policy, and the CI host restricts user namespaces as Ubuntu does, so there the `.deb`'s own Chromium gives the coded sandbox refusal, and an Ubuntu 24.04 run exports through the fallback described next. On 2026-11-03 the signed 1.0.4 `.deb` was installed with `sudo apt install` on an Ubuntu 24.04.4 desktop running GNOME, where its profile is loaded. The app showed it as the installed 1.0.4 `.deb`, `platefold --version` printed `Plate|Fold 1.0.4`, and `SAMPLE.md` exported with the bundled Chromium's sandbox on and no AppArmor denials.
 
 ## Use the AppImage
 
@@ -33,7 +33,7 @@ Keep the AppImage in a folder your account owns, such as `~/Applications`: the a
 ```console
 sha256sum --check --ignore-missing SHA256SUMS
 mkdir -p ~/Applications
-install -m 0755 PlateFold_1.0.3_linux-x86_64.AppImage ~/Applications/PlateFold.AppImage
+install -m 0755 PlateFold_1.0.4_linux-x86_64.AppImage ~/Applications/PlateFold.AppImage
 ~/Applications/PlateFold.AppImage
 ```
 
@@ -69,12 +69,7 @@ From the repository folder:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m pip install "markdown==3.11"
 ```
-
-!!! warning "Plate|Fold 1.0.3 needs Markdown 3.11"
-
-    Markdown 3.11.1 removed code that Plate|Fold 1.0.3 imports, and pip now installs 3.11.2. With either version installed, `platefold --version` still works, but every export stops with `cannot import name 'AsteriskProcessor'`. The `markdown==3.11` line above prevents that, and the same command fixes an existing install, including one from the release wheel. The desktop app and the container already ship with Markdown 3.11. A fixed release is being prepared.
 
 To use Playwright's Chromium instead of an installed browser:
 
@@ -92,7 +87,7 @@ platefold --version
 platefold --list-themes
 ```
 
-The first command prints the version, for example `Plate|Fold 1.0.3`. The second lists the ten built-in themes and eight font sets.
+The first command prints the version, for example `Plate|Fold 1.0.4`. The second lists the ten built-in themes and eight font sets.
 
 ## Where Plate|Fold keeps things
 

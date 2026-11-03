@@ -94,12 +94,7 @@ From the repository folder:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m pip install "markdown==3.11"
 ```
-
-!!! warning "Plate|Fold 1.0.3 needs Markdown 3.11"
-
-    Markdown 3.11.1 removed code that Plate|Fold 1.0.3 imports, and pip now installs 3.11.2. With either version installed, `platefold --version` still works, but every export stops with `cannot import name 'AsteriskProcessor'`. The `markdown==3.11` line above prevents that, and the same command fixes an existing install, including one from the release wheel. The desktop app and the container already ship with Markdown 3.11. A fixed release is being prepared.
 
 ### 3. Check it runs
 
@@ -108,7 +103,7 @@ platefold --version
 platefold --list-themes
 ```
 
-The first command prints the version, for example `Plate|Fold 1.0.3`. The second lists the ten built-in themes and eight font sets.
+The first command prints the version, for example `Plate|Fold 1.0.4`. The second lists the ten built-in themes and eight font sets.
 
 ### Where Plate|Fold keeps things
 

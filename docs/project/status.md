@@ -1,12 +1,12 @@
 # Release status
 
-**Plate|Fold 1.0.3 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.3) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0, 1.0.1 and 1.0.2 source tags remain available. Nothing on this page is a support commitment.
-
-!!! warning "Python packages need Markdown 3.11"
-
-    Installed from the wheel or from source, Plate|Fold 1.0.3 stops on every export with `cannot import name 'AsteriskProcessor'` when pip has installed Markdown 3.11.1 or 3.11.2. Install Plate|Fold, then run `python -m pip install "markdown==3.11"`. The desktop apps and the containers already ship with Markdown 3.11. A fixed release is being prepared.
+**Plate|Fold 1.0.4 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.4) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0, 1.0.1, 1.0.2 and 1.0.3 source tags remain available. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
+
+## Recorded 1.0.4 checks
+
+On 2026-11-03 the signed 1.0.4 `.deb` was installed with `sudo apt install` on an Ubuntu 24.04.4 desktop running GNOME, with the AppArmor profile for its bundled Chromium loaded. The app showed it as the installed 1.0.4 `.deb`, `platefold --version` printed `Plate|Fold 1.0.4`, and `SAMPLE.md` exported with the bundled Chromium's sandbox on and no AppArmor denials. The limits recorded for 1.0.3 below still apply.
 
 ## Recorded 1.0.3 platform checks
 
