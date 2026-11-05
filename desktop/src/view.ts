@@ -628,7 +628,6 @@ export function mount(root: HTMLElement, transport: Transport) {
       for (const theme of matches) {
         const button = document.createElement("button");
         button.dataset.theme = theme.name;
-        button.setAttribute("aria-label", theme.name);
         button.setAttribute(
           "aria-pressed",
           String(theme.name === selected?.name),

@@ -254,17 +254,26 @@ fn stable_excludes_drafts_and_prereleases_even_with_valid_signature() {
     assert!(fixture.verify(Channel::Prerelease, TARGET, "0.3.0").is_ok());
 }
 #[test]
-fn signed_but_expired_future_or_unbounded_metadata_fails() {
-    for (field, value) in [
-        ("expires_at", NOW),
-        ("issued_at", NOW + 301),
-        ("expires_at", NOW + 8 * 86400),
-        ("expires_at", NOW - 11),
+fn signed_but_expired_future_or_unbounded_metadata_fails_with_its_own_reason() {
+    for (field, value, expected) in [
+        ("expires_at", NOW, manifest::EXPIRED),
+        ("issued_at", NOW + 301, manifest::ISSUED_IN_FUTURE),
+        ("expires_at", NOW + 8 * 86400, manifest::INVALID_DATES),
+        ("expires_at", NOW - 11, manifest::INVALID_DATES),
     ] {
         let mut fixture = Fixture::new();
         fixture.manifest[field] = json!(value);
-        assert!(fixture.verify(Channel::Stable, TARGET, "0.2.0").is_err());
+        let error = fixture.verify(Channel::Stable, TARGET, "0.2.0").unwrap_err();
+        assert_eq!(error, expected, "{field} = {value}");
     }
+}
+#[test]
+fn only_a_future_issue_date_blames_the_local_clock() {
+    for message in [manifest::EXPIRED, manifest::INVALID_DATES] {
+        assert!(!message.contains("date and time"), "{message}");
+        assert!(message.contains("installed version keeps working"), "{message}");
+    }
+    assert!(manifest::ISSUED_IN_FUTURE.contains("date and time"));
 }
 #[test]
 fn artifact_identity_and_pinned_key_are_required_before_download() {
@@ -704,6 +713,8 @@ fn package_manager_and_portable_guidance_uses_bundle_marker() {
     assert_eq!(distribution(None), "portable");
     assert_eq!(distribution(Some(BundleType::Nsis)), "nsis");
     assert!(guidance(distribution(Some(BundleType::Deb))).contains("new .deb"));
+    // The guidance outlives the release it ships in, so it names no version.
+    assert!(guidance("deb").contains("./platefold_<version>_amd64.deb"));
     assert!(guidance(distribution(Some(BundleType::Rpm))).contains("package manager"));
     assert!(guidance("portable").contains("signature"));
     assert!(guidance("app").contains("approve each step"));
