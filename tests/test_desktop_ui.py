@@ -19,6 +19,15 @@ pytestmark = pytest.mark.integration
 DIST = Path(__file__).resolve().parents[1] / "desktop" / "dist"
 
 
+def theme_button(ui, name: str):
+    """The theme picker's button for one theme.
+
+    The button's accessible name is its visible text: the theme name, then any
+    tags such as "Dark", so voice control users can say what they see.
+    """
+    return ui.get_by_role("button", name=re.compile(rf"^{re.escape(name)}(\s|$)"))
+
+
 def _pseudo_text(value: str) -> str:
     """Deterministic expansion test data; placeholders stay machine-stable."""
     accents = str.maketrans(
@@ -355,7 +364,7 @@ def test_theme_preview_and_application_appearance_are_independent(ui):
     ui.get_by_label("Font set", exact=True).select_option("georgia")
     assert "Georgia" in ui.locator("#paper").evaluate("el => getComputedStyle(el).fontFamily")
     ui.locator("#choose-theme").click()
-    ui.get_by_role("button", name="midnight", exact=True).click()
+    theme_button(ui, "midnight").click()
     expect(ui.locator("#theme-dialog")).not_to_be_visible()
     expect(ui.locator("#choose-theme")).to_be_focused()
     assert ui.locator("#app").get_attribute("data-appearance") is None
@@ -463,8 +472,8 @@ def test_independent_panes_and_modal_results_keep_workspace_stationary(ui, size,
     ui.locator("#choose-theme").click()
     expect(ui.locator("#theme-dialog")).to_be_visible()
     ui.get_by_role("button", name="Dark", exact=True).click()
-    expect(ui.get_by_role("button", name="bristol", exact=True)).not_to_be_visible()
-    ui.get_by_role("button", name="midnight", exact=True).click()
+    expect(theme_button(ui, "bristol")).not_to_be_visible()
+    theme_button(ui, "midnight").click()
     expect(ui.locator("#choose-theme")).to_be_focused()
     ui.locator("#choose-theme").click()
     ui.keyboard.press("Escape")
@@ -681,14 +690,15 @@ def test_builtin_gating_and_dark_page_advisory(ui):
     expect(ui.get_by_role("button", name="Save as a copy")).to_be_enabled()
     expect(ui.locator("#mode-advisory")).not_to_be_visible()
     ui.locator("#choose-theme").click()
-    expect(ui.get_by_role("button", name="midnight", exact=True)).to_contain_text("DARK · SCREEN")
-    expect(ui.get_by_role("button", name="bristol", exact=True)).not_to_contain_text("DARK")
-    ui.get_by_role("button", name="midnight", exact=True).click()
+    expect(theme_button(ui, "midnight")).to_contain_text("DARK · SCREEN")
+    expect(theme_button(ui, "midnight")).to_have_accessible_name("midnight DARK · SCREEN")
+    expect(theme_button(ui, "bristol")).not_to_contain_text("DARK")
+    theme_button(ui, "midnight").click()
     expect(ui.locator("#mode-advisory")).to_be_visible()
     expect(ui.locator("#mode-advisory")).to_contain_text("Choose a light theme for printing")
     expect(ui.get_by_role("button", name="Overwrite")).to_be_disabled()
     ui.locator("#choose-theme").click()
-    ui.get_by_role("button", name="bristol", exact=True).click()
+    theme_button(ui, "bristol").click()
     expect(ui.locator("#mode-advisory")).not_to_be_visible()
     ui.get_by_text("Customise palette", exact=True).click()
     ui.get_by_label("page hex", exact=True).fill("#101010")
@@ -724,7 +734,7 @@ def test_user_theme_overwrite_and_named_delete_confirmation(ui):
         catalog_with_user_theme(ui),
     )
     ui.locator("#choose-theme").click()
-    ui.get_by_role("button", name="night-reading", exact=True).click()
+    theme_button(ui, "night-reading").click()
     expect(ui.locator("#theme-kind")).to_have_text("YOUR THEME · night-reading.json")
     delete = ui.get_by_role("button", name="Delete", exact=True)
     overwrite = ui.get_by_role("button", name="Overwrite")
@@ -797,7 +807,7 @@ def test_user_theme_overwrite_and_named_delete_confirmation(ui):
     expect(ui.locator("#choose-theme")).to_be_focused()
     expect(delete).to_be_disabled()
     ui.locator("#choose-theme").click()
-    expect(ui.get_by_role("button", name="night-reading", exact=True)).to_have_count(0)
+    expect(theme_button(ui, "night-reading")).to_have_count(0)
 
 
 def test_new_from_current_forks_the_selection_into_the_copy_dialog(ui):
