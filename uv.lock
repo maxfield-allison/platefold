@@ -787,7 +787,7 @@ requires-dist = [
     { name = "httpx", marker = "extra == 'dev'", specifier = ">=0.28,<1" },
     { name = "jsonschema", specifier = ">=4.23,<5" },
     { name = "mammoth", specifier = ">=1.11,<1.13.1" },
-    { name = "markdown", specifier = ">=3.11" },
+    { name = "markdown", specifier = ">=3.11,<3.11.3" },
     { name = "openpyxl", specifier = ">=3.1.5,<4" },
     { name = "pdfplumber", marker = "extra == 'dev'", specifier = ">=0.11" },
     { name = "pillow", specifier = ">=13.0.0" },

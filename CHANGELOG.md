@@ -14,6 +14,7 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 ### Fixed
 
+- Fix Markdown export failures in wheel and source installs that resolve Python-Markdown 3.11.3 by requiring `markdown>=3.11,<3.11.3`. The desktop apps and container already pin 3.11.2.
 - The Updates dialog no longer tells you to check your system clock when the signed release information has expired. It now says your installed version keeps working and to try again later. It mentions the clock only when the release information is dated in the future. The update instructions for a `.deb` installation no longer name the 1.0.1 package file.
 - Theme picker buttons now include their visible tags, such as `DARK · SCREEN`, in the name that screen readers and voice control use.
 
