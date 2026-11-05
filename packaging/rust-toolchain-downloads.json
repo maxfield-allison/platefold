@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "version": "1.89.0",
-  "ci_image_digest": "sha256:c7dcf7fa9be765f8dbec8d67096b52bcf21ea2647e975338284f39191bed784d",
+  "version": "1.90.0",
+  "ci_image_digest": "sha256:b388a722b811ae376e2e083c14948da32f8fba22e85b7e1a233daae66917b67e",
   "channel_manifest": {
-    "url": "https://static.rust-lang.org/dist/channel-rust-1.89.0.toml",
-    "sha256": "fbd1662e100e7b305908ece23b441cb7534eadfa6336c5f173ff08d1cec174a1",
-    "size": 949694
+    "url": "https://static.rust-lang.org/dist/channel-rust-1.90.0.toml",
+    "sha256": "489c19f20d331765ab2835661eb546de90f6446a107a8db83045e7371e45cae2",
+    "size": 948974
   },
   "platforms": {
     "macos-arm64": {
@@ -13,24 +13,24 @@
       "components": [
         {
           "package": "cargo",
-          "path": "dist/2025-08-07/cargo-1.89.0-aarch64-apple-darwin.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/cargo-1.89.0-aarch64-apple-darwin.tar.xz",
-          "sha256": "545517d16ac76789aa6ce801cbc3eeecc9acaf43f3ccb63148c3577f2bb4b8d3",
-          "size": 7991100
+          "path": "dist/2025-09-18/cargo-1.90.0-aarch64-apple-darwin.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/cargo-1.90.0-aarch64-apple-darwin.tar.xz",
+          "sha256": "17a4410a27bf7dad4765f3809265c225f25f8b009da3d4b76cd0927acdae04b5",
+          "size": 8523620
         },
         {
           "package": "rust-std",
-          "path": "dist/2025-08-07/rust-std-1.89.0-aarch64-apple-darwin.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/rust-std-1.89.0-aarch64-apple-darwin.tar.xz",
-          "sha256": "1f729f8ba21725618ab894f14cc38f01470f1d15ea76a81fac2da63291bed75c",
-          "size": 26783652
+          "path": "dist/2025-09-18/rust-std-1.90.0-aarch64-apple-darwin.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/rust-std-1.90.0-aarch64-apple-darwin.tar.xz",
+          "sha256": "c36777aec17d617f85f94b7cb87bdd4270eeca30ef38c6f686809d163c881609",
+          "size": 29010092
         },
         {
           "package": "rustc",
-          "path": "dist/2025-08-07/rustc-1.89.0-aarch64-apple-darwin.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/rustc-1.89.0-aarch64-apple-darwin.tar.xz",
-          "sha256": "6d2cf6164bef00ff3d2c37ca0a0658ffb7c9c3178882a72d78e35abeba888860",
-          "size": 63381016
+          "path": "dist/2025-09-18/rustc-1.90.0-aarch64-apple-darwin.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/rustc-1.90.0-aarch64-apple-darwin.tar.xz",
+          "sha256": "89551c0ba1cc6d0312aebc4a6cafe4497223217ea8e87c81f6afbe127dfaeeb6",
+          "size": 63724992
         }
       ]
     },
@@ -39,24 +39,24 @@
       "components": [
         {
           "package": "cargo",
-          "path": "dist/2025-08-07/cargo-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/cargo-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "sha256": "8c0a40a5411746ff6600d93acd16652fef56702196bb25b940ff399d7e107f40",
-          "size": 9163172
+          "path": "dist/2025-09-18/cargo-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/cargo-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "sha256": "a238d6a87cb0935e4f1bf0b4d093cbac3833d2f8b04413417bb622779669bec5",
+          "size": 9749472
         },
         {
           "package": "rust-std",
-          "path": "dist/2025-08-07/rust-std-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/rust-std-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "sha256": "ba81500406fdf8a3a81078df2129bd6e4793b579c9e1a498563670bccad92611",
-          "size": 23957088
+          "path": "dist/2025-09-18/rust-std-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/rust-std-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "sha256": "3b8c22f81c93c7e914369433430792bd6c06403806ae25b0b95f3cfc540a8b48",
+          "size": 21696816
         },
         {
           "package": "rustc",
-          "path": "dist/2025-08-07/rustc-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "url": "https://static.rust-lang.org/dist/2025-08-07/rustc-1.89.0-x86_64-pc-windows-msvc.tar.xz",
-          "sha256": "76f70bbd3dc8681ee189931bc5e270cd9524ff3d17738d87f609bba4980c466c",
-          "size": 79599696
+          "path": "dist/2025-09-18/rustc-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "url": "https://static.rust-lang.org/dist/2025-09-18/rustc-1.90.0-x86_64-pc-windows-msvc.tar.xz",
+          "sha256": "a18b3912905f154c34a7572954dda9e9849ac6411a1e02fa390bf742f918fbcb",
+          "size": 79909984
         }
       ]
     }
