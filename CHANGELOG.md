@@ -6,6 +6,18 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.5] - 2026-11-05
+
+### Changed
+
+- Update the desktop app's Tauri framework to 2.12 and its window and webview libraries to wry 0.57 and tao 0.37. Release builds now use Rust 1.90.0, which this Tauri line requires.
+
+### Fixed
+
+- The Updates dialog no longer tells you to check your system clock when the signed release information has expired. It now says your installed version keeps working and to try again later. It mentions the clock only when the release information is dated in the future. The update instructions for a `.deb` installation no longer name the 1.0.1 package file.
+- Theme picker buttons now include their visible tags, such as `DARK · SCREEN`, in the name that screen readers and voice control use.
+
+
 ## [1.0.4] - 2026-11-03
 
 ### Changed
