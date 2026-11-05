@@ -137,12 +137,12 @@ jobs:
           gcc-mingw-w64-x86-64 libgtk-3-dev libwebkit2gtk-4.1-dev librsvg2-dev
       - name: Select the Rust toolchain
         run: |
-          rustup toolchain install 1.89.0 --profile minimal --component clippy
-          rustup target add --toolchain 1.89.0 x86_64-pc-windows-gnu
+          rustup toolchain install 1.90.0 --profile minimal --component clippy
+          rustup target add --toolchain 1.90.0 x86_64-pc-windows-gnu
       - name: Test the native shell
         working-directory: desktop/src-tauri
         env:
-          RUSTUP_TOOLCHAIN: 1.89.0
+          RUSTUP_TOOLCHAIN: 1.90.0
         run: |
           mkdir -p runtime
           cargo test --locked --workspace --no-default-features --features tauri-plugin-updater/rustls-tls
