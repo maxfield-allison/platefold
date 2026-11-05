@@ -194,7 +194,7 @@ fn installable(distribution: &str) -> bool {
     matches!(distribution, "nsis" | "msi" | "appimage" | "app")
 }
 
-const DEB_GUIDANCE: &str = "This copy was installed from a .deb package, so it can't replace itself. To update, download the new .deb from the release page and install it with your package manager, for example sudo apt install ./platefold_1.0.1_amd64.deb. Your settings and themes are kept.";
+const DEB_GUIDANCE: &str = "This copy was installed from a .deb package, so it can't replace itself. To update, download the new .deb from the release page and install it with your package manager, for example sudo apt install ./platefold_<version>_amd64.deb. Replace <version> with the version number before running the command. Your settings and themes are kept.";
 
 fn guidance(distribution: &str) -> &'static str {
     match distribution {

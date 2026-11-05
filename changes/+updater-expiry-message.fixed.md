@@ -1,0 +1,1 @@
+The Updates dialog no longer tells you to check your system clock when the signed release information has expired. It now says your installed version keeps working and to try again later. It mentions the clock only when the release information is dated in the future. The update instructions for a `.deb` installation no longer name the 1.0.1 package file.

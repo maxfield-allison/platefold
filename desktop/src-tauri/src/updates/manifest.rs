@@ -78,6 +78,34 @@ pub(super) fn artifact_file(url: &str) -> Result<String, String> {
         .ok_or_else(|| "Invalid release artifact details".into())
 }
 
+/// How far ahead of this computer's clock a feed may be issued.
+const CLOCK_SKEW_SECS: u64 = 300;
+/// The longest validity window a signed feed may claim.
+const MAX_VALIDITY_SECS: u64 = 7 * 86400;
+
+pub(super) const INVALID_DATES: &str = "The update server sent release information with an invalid date range. Your installed version keeps working; try again later.";
+pub(super) const ISSUED_IN_FUTURE: &str = "The release information is dated in the future. Check that this computer's date and time are correct.";
+pub(super) const EXPIRED: &str = "PlateFold couldn't confirm the latest release because its signed release information has expired. Your installed version keeps working; try again later.";
+
+/// Refuse signed metadata outside its validity window.
+///
+/// Expiry limits how long stale release information can be replayed to hold
+/// a client on an old release. Each failure gets its own message. Only the
+/// future-date message suggests checking this computer's clock; expiry
+/// does not establish why the release information is out of date.
+fn check_validity(issued_at: u64, expires_at: u64, now: u64) -> Result<(), String> {
+    if expires_at <= issued_at || expires_at - issued_at > MAX_VALIDITY_SECS {
+        return Err(INVALID_DATES.into());
+    }
+    if issued_at > now.saturating_add(CLOCK_SKEW_SECS) {
+        return Err(ISSUED_IN_FUTURE.into());
+    }
+    if expires_at <= now {
+        return Err(EXPIRED.into());
+    }
+    Ok(())
+}
+
 /// What the compiled update policy trusts.
 pub(super) struct Trust<'a> {
     pub(super) metadata_keys: &'a [String],
@@ -122,15 +150,7 @@ pub(super) fn verify(
     if manifest.schema_version != 1 || !manifest.published || manifest.channel != channel {
         return Err("This release is not published on the selected channel".into());
     }
-    if manifest.issued_at > now.saturating_add(300)
-        || manifest.expires_at <= now
-        || manifest.expires_at <= manifest.issued_at
-        || manifest.expires_at - manifest.issued_at > 7 * 86400
-    {
-        return Err(
-            "Release metadata has expired or has an invalid date; check your system clock".into(),
-        );
-    }
+    check_validity(manifest.issued_at, manifest.expires_at, now)?;
     let version = Version::parse(&manifest.version).map_err(|_| "Invalid release version")?;
     let current = Version::parse(current).map_err(|_| "Invalid installed version")?;
     if !version.build.is_empty() || (channel == Channel::Stable && !version.pre.is_empty()) {

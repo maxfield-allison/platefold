@@ -351,7 +351,7 @@ def state_delete_dialog(page) -> None:
         USER_THEME_PATH,
     )
     page.locator("#choose-theme").evaluate("el => el.click()")
-    page.get_by_role("button", name="night-reading", exact=True).evaluate("el => el.click()")
+    page.locator('#theme-dialog button[data-theme="night-reading"]').evaluate("el => el.click()")
     page.locator("#delete-theme").evaluate("el => el.click()")
     expect(page.locator("#delete-dialog")).to_be_visible()
     emit(page, "{schema_version:1,event:'error',id:'delete',message:'Permission denied'}")
