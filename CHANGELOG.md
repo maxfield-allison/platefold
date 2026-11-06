@@ -6,6 +6,15 @@ All notable changes to Plate|Fold are recorded here. The format follows [Keep a 
 
 <!-- towncrier release notes start -->
 
+## [1.0.6] - 2026-11-06
+
+Version 1.0.5 was tagged but not published. Its changes, listed below, first ship in this release.
+
+### Security
+
+- Refresh the pinned Debian container snapshot to include the patched APT packages (CVE-2026-109518).
+
+
 ## [1.0.5] - 2026-11-05
 
 ### Changed
