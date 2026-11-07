@@ -29,6 +29,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -72,6 +73,7 @@ RUNTIME_CHECKS = (
 )
 DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
 VERSION = re.compile(r"v[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\Z")
+SECRET_SPEC = re.compile(r"id=[a-z][a-z0-9-]*,src=/[^,\s]+\Z")
 ATTESTATION = "attestation-manifest"
 # Published images are signed with the release Cosign key (tools/cosign_release.py).
 SIGNING_POLICY = "cosign"
@@ -360,7 +362,26 @@ def private_hosts():
         value = os.environ.get(name, "").split(":")[0]
         if value:
             hosts.add(value.lower())
+    # Package mirrors the build reached through its secrets are private too.
+    hosts.update(host.lower() for host in os.environ.get("PLATEFOLD_PRIVATE_HOSTS", "").split())
     return hosts
+
+
+def build_secrets():
+    """Return the --secret arguments named by PLATEFOLD_BUILD_SECRETS.
+
+    A private build passes package-mirror configuration as BuildKit secrets,
+    written "--secret id=NAME,src=/PATH" and repeated; a public build passes
+    nothing and the Dockerfile uses the public upstreams. Only that form is
+    accepted, so the variable cannot add any other build option.
+    """
+    words = shlex.split(os.environ.get("PLATEFOLD_BUILD_SECRETS", ""))
+    pairs = list(zip(words[::2], words[1::2], strict=False))
+    if len(words) % 2 or any(
+        flag != "--secret" or not SECRET_SPEC.match(spec) for flag, spec in pairs
+    ):
+        raise ValueError("PLATEFOLD_BUILD_SECRETS accepts only --secret id=NAME,src=/PATH pairs")
+    return words
 
 
 def check_public_text(paths, hosts):
@@ -499,6 +520,7 @@ def build(arch):
         "org.opencontainers.image.source=" + inputs["source_repository"],
         "--metadata-file",
         str(directory / "build.json"),
+        *build_secrets(),
         "--tag",
         local,
         ".",

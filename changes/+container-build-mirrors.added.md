@@ -1,0 +1,1 @@
+Container builds from source can download npm, Python, Playwright browser and Debian packages through your own mirrors, passed as optional BuildKit secrets. A build without them still downloads from the public sources. The container guide lists the secrets and the values each one accepts.
