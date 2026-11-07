@@ -1,10 +1,17 @@
 # syntax=docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
 ARG PYTHON_IMAGE=python:3.13-slim@sha256:7ce4b6dfe35e55397b7cda544f8a13f191b7ae28dc5aad71fe664dbc9bc2623f
 ARG NODE_IMAGE=node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d
+# A build may point the npm, pip, Playwright and Debian downloads at package
+# mirrors by passing BuildKit secrets: npmrc, pip-conf and mirror-env. Every
+# mount is optional; without them each step downloads from the public
+# upstream. BuildKit mounts the secret files without adding those files to
+# image layers. Each step reads only the mirror-env key it needs, and the
+# npm and Python lock hashes, the browser manifest and Debian's signed
+# repository metadata verify what arrives.
 FROM ${NODE_IMAGE} AS web
 WORKDIR /build/desktop
 COPY desktop/package.json desktop/package-lock.json ./
-RUN npm ci
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc,required=false npm ci
 # Copy the web build inputs by name after npm ci, never the whole desktop/
 # tree, so nothing from the build host lands on the installed packages.
 COPY desktop/index.html desktop/tsconfig.json desktop/vite.config.ts ./
@@ -17,9 +24,11 @@ RUN npm run build
 FROM ${PYTHON_IMAGE} AS python-build
 WORKDIR /build
 COPY packaging/container/requirements.txt /build/requirements.txt
-RUN python -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt
+RUN --mount=type=secret,id=pip-conf,target=/etc/pip.conf,required=false \
+    python -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt
 COPY packaging/container/build.txt /build/build.txt
-RUN pip install --no-cache-dir --require-hashes -r /build/build.txt
+RUN --mount=type=secret,id=pip-conf,target=/etc/pip.conf,required=false \
+    pip install --no-cache-dir --require-hashes -r /build/build.txt
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/browsers
 # Playwright downloads a different Chromium build per architecture: Chrome for
 # Testing on amd64, Playwright's own Chromium build on arm64. Each has its own
@@ -30,7 +39,15 @@ COPY packaging/container/check_browser.py /build/
 # Host validation would check this build stage, not the runtime image, and
 # whether it writes its DEPENDENCIES_VALIDATED marker differs by architecture,
 # so it is skipped to keep the payload manifests exact.
-RUN PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1 python -m playwright install --no-shell chromium && \
+RUN --mount=type=secret,id=mirror-env,required=false \
+    host=$(sed -n '/^export PLAYWRIGHT_DOWNLOAD_HOST=/{s///p;q;}' /run/secrets/mirror-env 2>/dev/null || true) && \
+    case "$host" in \
+        "") ;; \
+        *[[:space:]\#\&\\]*) echo "mirror-env: PLAYWRIGHT_DOWNLOAD_HOST is not a plain URL" >&2; exit 1 ;; \
+        http://*|https://*) export PLAYWRIGHT_DOWNLOAD_HOST="$host" ;; \
+        *) echo "mirror-env: PLAYWRIGHT_DOWNLOAD_HOST is not a plain URL" >&2; exit 1 ;; \
+    esac && \
+    PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1 python -m playwright install --no-shell chromium && \
     python /build/check_browser.py && \
     chmod -R a+rX /opt/browsers
 COPY pyproject.toml README.md LICENSE ./
@@ -44,12 +61,25 @@ ARG CACHE_BUST=local
 # Frozen Debian repository metadata keeps OS inputs repeatable. Advance deliberately
 # with a fresh image scan; base image digest and Python/npm locks move separately.
 ARG DEBIAN_SNAPSHOT=20261106T000000Z
-RUN case "$TARGETARCH" in amd64|arm64) ;; *) echo "unsupported architecture: $TARGETARCH" >&2; exit 1;; esac && \
+# The image keeps the public sources list. apt reads a temporary copy, which
+# a mirror, when given, points at the same snapshot paths; the copy is
+# removed with the package lists, and apt logs the same command either way.
+RUN --mount=type=secret,id=mirror-env,required=false \
+    case "$TARGETARCH" in amd64|arm64) ;; *) echo "unsupported architecture: $TARGETARCH" >&2; exit 1;; esac && \
     rm /etc/apt/sources.list.d/debian.sources && \
     printf 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian/%s/ trixie main\ndeb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/%s/ trixie-security main\n' "$DEBIAN_SNAPSHOT" "$DEBIAN_SNAPSHOT" > /etc/apt/sources.list && \
-    apt-get update && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends tini ca-certificates fontconfig fonts-dejavu-core fonts-liberation fonts-noto-core fonts-noto-cjk libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 libatspi2.0-0t64 libcairo2 libcups2t64 libdbus-1-3 libdrm2 libgbm1 libglib2.0-0t64 libnspr4 libnss3 libpango-1.0-0 libx11-6 libxcb1 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxkbcommon0 libxrandr2 && \
-    rm -rf /var/lib/apt/lists/* && \
+    snapshot=$(sed -n '/^export MIRROR_DEBIAN_SNAPSHOT=/{s///p;q;}' /run/secrets/mirror-env 2>/dev/null || true) && \
+    case "$snapshot" in \
+        "") snapshot=https://snapshot.debian.org ;; \
+        *[[:space:]\#\&\\]*) echo "mirror-env: MIRROR_DEBIAN_SNAPSHOT is not a plain URL" >&2; exit 1 ;; \
+        http://*|https://*) ;; \
+        *) echo "mirror-env: MIRROR_DEBIAN_SNAPSHOT is not a plain URL" >&2; exit 1 ;; \
+    esac && \
+    sed "s#https://snapshot.debian.org/#$snapshot/#" /etc/apt/sources.list > /tmp/apt-sources.list && \
+    apt="apt-get -o Dir::Etc::SourceList=/tmp/apt-sources.list -o Dir::Etc::SourceParts=/nonexistent" && \
+    $apt update && $apt upgrade -y && \
+    $apt install -y --no-install-recommends tini ca-certificates fontconfig fonts-dejavu-core fonts-liberation fonts-noto-core fonts-noto-cjk libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 libatspi2.0-0t64 libcairo2 libcups2t64 libdbus-1-3 libdrm2 libgbm1 libglib2.0-0t64 libnspr4 libnss3 libpango-1.0-0 libx11-6 libxcb1 libxcomposite1 libxdamage1 libxext6 libxfixes3 libxkbcommon0 libxrandr2 && \
+    rm -rf /var/lib/apt/lists/* /tmp/apt-sources.list && \
     groupadd --gid 10001 platefold && useradd --uid 10001 --gid 10001 --home-dir /tmp/home --no-create-home platefold && \
     install -d -o 10001 -g 10001 -m 0700 /data /output
 COPY --from=python-build /opt/venv /opt/venv

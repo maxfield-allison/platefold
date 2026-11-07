@@ -562,6 +562,90 @@ def test_attestations_naming_a_private_host_are_refused(tmp_path):
     r.check_public_text([path], {"registry.other.example"})
 
 
+def test_mirror_hosts_from_the_build_secrets_count_as_private(monkeypatch):
+    monkeypatch.setenv("CI_SERVER_HOST", "ci.internal.example")
+    monkeypatch.setenv("PLATEFOLD_PRIVATE_HOSTS", "Mirror.Internal.Example 192.0.2.10")
+    assert r.private_hosts() == {"ci.internal.example", "mirror.internal.example", "192.0.2.10"}
+
+
+def test_build_secrets_pass_through_only_secret_specs(monkeypatch):
+    monkeypatch.setenv(
+        "PLATEFOLD_BUILD_SECRETS",
+        " --secret id=pip-conf,src=/tmp/m/pip-conf --secret id=mirror-env,src=/tmp/m/mirror-env",
+    )
+    assert r.build_secrets() == [
+        "--secret",
+        "id=pip-conf,src=/tmp/m/pip-conf",
+        "--secret",
+        "id=mirror-env,src=/tmp/m/mirror-env",
+    ]
+
+
+class _StopAfterBuild(Exception):
+    pass
+
+
+def test_build_hands_the_secrets_to_buildx_ahead_of_the_tag(monkeypatch, tmp_path):
+    secrets = "--secret id=pip-conf,src=/tmp/m/pip-conf --secret id=npmrc,src=/tmp/m/npmrc"
+    monkeypatch.setenv("PLATEFOLD_BUILD_SECRETS", secrets)
+    monkeypatch.setenv("CI_REGISTRY_IMAGE", "registry.example/group/platefold")
+    monkeypatch.setenv("CI_PIPELINE_ID", "7")
+    monkeypatch.setattr(r, "OUT", tmp_path)
+    monkeypatch.setattr(r, "source_identity", lambda: (SOURCE, "0.0.0-dev"))
+    monkeypatch.setattr(r, "project_version", lambda: "0.0.0-dev")
+    monkeypatch.setattr(
+        r,
+        "load_inputs",
+        lambda: {
+            "public_repositories": REPOS,
+            "sbom_generator": "docker.io/docker/buildkit-syft-scanner@" + NEW,
+            "python_image": "python@" + NEW,
+            "node_image": "node@" + NEW,
+            "debian_snapshot": "20261106T000000Z",
+            "source_repository": "https://github.com/example/platefold",
+        },
+    )
+    calls = []
+
+    def fake_run(*args, **kwargs):
+        calls.append(args)
+        if args[:2] == ("docker", "info"):
+            return subprocess.CompletedProcess(args, 0, stdout="x86_64\n", stderr="")
+        raise _StopAfterBuild
+
+    monkeypatch.setattr(r, "run", fake_run)
+
+    with pytest.raises(_StopAfterBuild):
+        r.build("amd64")
+
+    argv = list(calls[-1])
+    assert argv[:3] == ["docker", "buildx", "build"]
+    start = argv.index("--secret")
+    assert argv[start : start + 4] == secrets.split()
+    assert start < argv.index("--tag")
+
+
+def test_build_secrets_are_empty_for_a_public_build(monkeypatch):
+    monkeypatch.delenv("PLATEFOLD_BUILD_SECRETS", raising=False)
+    assert r.build_secrets() == []
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "--secret",
+        "--build-arg PYTHON_IMAGE=evil",
+        "--secret id=pip-conf,src=relative/path",
+        "--secret id=pip-conf,src=/tmp/x,env=TOKEN",
+        "--secret id=pip-conf,src=/tmp/x --output type=local,dest=/",
+    ],
+)
+def test_build_secrets_refuse_anything_but_secret_specs(monkeypatch, value):
+    monkeypatch.setenv("PLATEFOLD_BUILD_SECRETS", value)
+    with pytest.raises(ValueError, match="PLATEFOLD_BUILD_SECRETS"):
+        r.build_secrets()
+
+
 @pytest.mark.parametrize(
     ("result", "expected"),
     [
