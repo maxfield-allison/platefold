@@ -564,8 +564,14 @@ def test_attestations_naming_a_private_host_are_refused(tmp_path):
 
 def test_mirror_hosts_from_the_build_secrets_count_as_private(monkeypatch):
     monkeypatch.setenv("CI_SERVER_HOST", "ci.internal.example")
+    monkeypatch.setenv("CI_REGISTRY", "registry.internal.example:5050")
     monkeypatch.setenv("PLATEFOLD_PRIVATE_HOSTS", "Mirror.Internal.Example 192.0.2.10")
-    assert r.private_hosts() == {"ci.internal.example", "mirror.internal.example", "192.0.2.10"}
+    assert r.private_hosts() == {
+        "ci.internal.example",
+        "registry.internal.example",
+        "mirror.internal.example",
+        "192.0.2.10",
+    }
 
 
 def test_build_secrets_pass_through_only_secret_specs(monkeypatch):
