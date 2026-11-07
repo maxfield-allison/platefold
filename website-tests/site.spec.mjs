@@ -59,13 +59,13 @@ test("without JavaScript the homepage keeps the sample, workspace, release notic
     await expect(page.locator("[data-page-controls]")).toBeHidden();
     await expect(page.locator("[data-interface-controls]")).toBeHidden();
     await expect(page.locator(".notice")).toContainText(
-      "Plate|Fold 1.0.4 is available for Windows, Linux and Apple Silicon.",
+      "Plate|Fold 1.0.6 is available for Windows, Linux and Apple Silicon.",
     );
     await expect(
-      page.getByRole("link", { name: "Download 1.0.4", exact: true }),
+      page.getByRole("link", { name: "Download 1.0.6", exact: true }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/maxfield-allison/platefold/releases/tag/v1.0.4",
+      "https://github.com/maxfield-allison/platefold/releases/tag/v1.0.6",
     );
     await expect(
       page.getByRole("link", { name: "Get started in the docs" }),

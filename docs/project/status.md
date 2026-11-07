@@ -1,8 +1,12 @@
 # Release status
 
-**Plate|Fold 1.0.4 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.4) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0, 1.0.1, 1.0.2 and 1.0.3 source tags remain available. Nothing on this page is a support commitment.
+**Plate|Fold 1.0.6 is available.** The [release](https://github.com/maxfield-allison/platefold/releases/tag/v1.0.6) contains Windows installers, a portable Windows ZIP, Linux packages, an Apple Silicon DMG and Python packages, with checksums and signature evidence. Signed [Linux containers](../guides/container.md) are available for amd64 and arm64 on Docker Hub and GHCR. The published 1.0.0 to 1.0.4 source tags remain available. 1.0.5 was tagged but not released. Nothing on this page is a support commitment.
 
 A platform is only listed as working when a real run on that platform has been recorded. Unit tests passing, or a package building, doesn't count on its own.
+
+## Recorded 1.0.6 checks
+
+On 2026-11-06 the signed 1.0.6 online installer was installed per user on a clean Windows Home desktop, from an administrator account and without an elevation prompt. The app showed it as the installed 1.0.6 NSIS build, and `SAMPLE.md` exported through the app to three pages, the second an A3 landscape plate, with no warnings. That run did not exercise SmartScreen, an upgrade, removal or a standard-user installation. The Apple Silicon DMG was notarized, and Gatekeeper accepted it when the release was built; the 1.0.6 app was not opened on a Mac. For Linux, 1.0.6 has the CI package tests described in the [Linux guide](../get-started/linux.md). The records below describe checks on 1.0.4 and 1.0.3; they do not establish coverage for 1.0.6.
 
 ## Recorded 1.0.4 checks
 
