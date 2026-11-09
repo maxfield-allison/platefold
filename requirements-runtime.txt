@@ -1,5 +1,5 @@
 Babel==2.18.0
-Markdown==3.11.2
+Markdown==3.11.3
 PyYAML==6.0.3
 Pygments==2.21.0
 attrs==26.1.0

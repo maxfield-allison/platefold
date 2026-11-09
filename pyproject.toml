@@ -46,7 +46,7 @@ dependencies = [
     "websocket-client>=1.7",  # DevTools Protocol transport (see platefold/cdp.py)
     # markdown -> HTML; 3.11 scans code spans in linear time. 3.11.3 changed the
     # code-span, emphasis and heading-id internals Plate|Fold extends.
-    "markdown>=3.11,<3.11.3",
+    "markdown>=3.11,<3.11.4",
     "Pygments>=2.18",         # syntax highlighting for fenced code blocks
     "pypdf>=6.21.4",          # page counts, outline bookmarks, destinations
     "Pillow>=13.0.0",         # image dimensions and downsampling; patched image codecs
@@ -70,7 +70,7 @@ dev = [
     "pdfplumber>=0.11",  # blank-page regression check
     "pytest>=8.0",
     "cryptography>=46",  # release-evidence signature checks (tools/assemble_release.py)
-    "ruff==0.17.3",
+    "ruff==0.17.4",
     "pyright==1.1.414",
     "build>=1.2",
     # Not used at runtime. Kept purely as a way to download a pinned Chromium
