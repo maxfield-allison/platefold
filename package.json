@@ -4,7 +4,7 @@
   "private": true,
   "description": "Vendored mermaid.js used by the Python renderer. No JS is executed outside the headless browser.",
   "dependencies": {
-    "mermaid": "11.16.1"
+    "mermaid": "12.3.0"
   },
   "devDependencies": {
     "esbuild": "0.28.2"
